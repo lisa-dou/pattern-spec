@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_AWSAIMbsEeCv0c7dRN89LA" name="Mediator1">
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_AWSAIcbsEeCv0c7dRN89LA" name="Integer"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_AWSAIsbsEeCv0c7dRN89LA" name="String"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_AWSAI8bsEeCv0c7dRN89LA" name="Boolean"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_AWSAJMbsEeCv0c7dRN89LA" name="Mediator" isAbstract="true">
+    <ownedAttribute xmi:id="_AWSAJcbsEeCv0c7dRN89LA" name="mboxes" type="_AWSAa8bsEeCv0c7dRN89LA" association="_AWSAgcbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAJsbsEeCv0c7dRN89LA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAJ8bsEeCv0c7dRN89LA"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_AWSAKMbsEeCv0c7dRN89LA" name="colleagues" type="_AWSAZsbsEeCv0c7dRN89LA" association="_AWSAhcbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAKcbsEeCv0c7dRN89LA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAKsbsEeCv0c7dRN89LA"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_AWSAK8bsEeCv0c7dRN89LA" name="Connect" precondition="_AWSALMbsEeCv0c7dRN89LA" postcondition="_AWSALsbsEeCv0c7dRN89LA" bodyCondition="_AWSAMMbsEeCv0c7dRN89LA">
+      <ownedRule xmi:id="_AWSALMbsEeCv0c7dRN89LA" name="ConnectPre">
+        <nameExpression xmi:id="_AWSALcbsEeCv0c7dRN89LA" symbol="//@ requires !Connected(coll,this) &amp;&amp; !Sender(coll,mb) &amp;&amp; this.mboxes.contains(mb);"/>
+      </ownedRule>
+      <ownedRule xmi:id="_AWSALsbsEeCv0c7dRN89LA" name="ConnectPost">
+        <nameExpression xmi:id="_AWSAL8bsEeCv0c7dRN89LA" symbol="//@ ensures Connected(coll,this) &amp;&amp; Sender(coll,mb);"/>
+      </ownedRule>
+      <ownedRule xmi:id="_AWSAMMbsEeCv0c7dRN89LA" name="ConnectBody">
+        <nameExpression xmi:id="_AWSAMcbsEeCv0c7dRN89LA" symbol="{ this.colleagues.add(coll); &#xA;mb.senders.add(coll); }"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_AWSAMsbsEeCv0c7dRN89LA" name="coll" type="_AWSAZsbsEeCv0c7dRN89LA"/>
+      <ownedParameter xmi:id="_AWSAM8bsEeCv0c7dRN89LA" name="mb" type="_AWSAa8bsEeCv0c7dRN89LA"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_AWSANMbsEeCv0c7dRN89LA" name="Disconnect" precondition="_AWSANcbsEeCv0c7dRN89LA" postcondition="_AWSAN8bsEeCv0c7dRN89LA" bodyCondition="_AWSAOcbsEeCv0c7dRN89LA">
+      <ownedRule xmi:id="_AWSANcbsEeCv0c7dRN89LA" name="DisconnectPre">
+        <nameExpression xmi:id="_AWSANsbsEeCv0c7dRN89LA" symbol="//@ requires Connected(coll,this) &amp;&amp; Sender(coll,mb) &amp;&amp; this.mboxes.contains(mb);"/>
+      </ownedRule>
+      <ownedRule xmi:id="_AWSAN8bsEeCv0c7dRN89LA" name="DisconnectPost">
+        <nameExpression xmi:id="_AWSAOMbsEeCv0c7dRN89LA" symbol="//@ ensures !Connected(coll,this) &amp;&amp; !Sender(coll,mb) &amp;&amp; (\forall MailBox mbvar; mboxes.contains(mbvar)==> !Receiver(coll,mbvar));"/>
+      </ownedRule>
+      <ownedRule xmi:id="_AWSAOcbsEeCv0c7dRN89LA" name="DisconnectBody">
+        <nameExpression xmi:id="_AWSAOsbsEeCv0c7dRN89LA" symbol="{ this.colleagues.remove(coll); &#xA;for(Iterator&lt;MailBox> itmb=this.mboxes.iterator(); itmb.hasNext();)&#xA;{ MailBox tempmb= itmb.next();&#xA;tempmb.receivers.remove(coll);} }"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_AWSAO8bsEeCv0c7dRN89LA" name="coll" type="_AWSAZsbsEeCv0c7dRN89LA"/>
+      <ownedParameter xmi:id="_AWSAPMbsEeCv0c7dRN89LA" name="mb" type="_AWSAa8bsEeCv0c7dRN89LA"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_AWSAPcbsEeCv0c7dRN89LA" name="PutMS" precondition="_AWSAPsbsEeCv0c7dRN89LA" postcondition="_AWSAQsbsEeCv0c7dRN89LA" bodyCondition="_AWSAQMbsEeCv0c7dRN89LA">
+      <ownedRule xmi:id="_AWSAPsbsEeCv0c7dRN89LA" name="PutMSPre">
+        <nameExpression xmi:id="_AWSAP8bsEeCv0c7dRN89LA" symbol="//@ requires Connected(from,this) &amp;&amp; (\forall Colleague tovar; to.contains(tovar)==>Connected(tovar,this)) &amp;&amp; Sender(from,mb) &amp;&amp; this.mboxes.contains(mb);"/>
+      </ownedRule>
+      <ownedRule xmi:id="_AWSAQMbsEeCv0c7dRN89LA" name="PutMSBody">
+        <nameExpression xmi:id="_AWSAQcbsEeCv0c7dRN89LA" symbol="{ mb.message=ms; &#xA;for(Iterator&lt;Colleague> itcol=to.iterator(); itcol.hasNext();)&#xA;{ Colleague tempcol= itcol.next();&#xA;mb.receivers.add(tempcol);}}"/>
+      </ownedRule>
+      <ownedRule xmi:id="_AWSAQsbsEeCv0c7dRN89LA" name="PutMSPost">
+        <nameExpression xmi:id="_AWSAQ8bsEeCv0c7dRN89LA" symbol="//@ ensures (\forall Colleague tovar; to.contains(tovar)==>Receiver(tovar,mb)) &amp;&amp; mb.message==ms;"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_AWSARMbsEeCv0c7dRN89LA" name="from" type="_AWSAZsbsEeCv0c7dRN89LA"/>
+      <ownedParameter xmi:id="_AWSARcbsEeCv0c7dRN89LA" name="to" type="_AWSAZsbsEeCv0c7dRN89LA">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSARsbsEeCv0c7dRN89LA" value="*"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAR8bsEeCv0c7dRN89LA"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_AWSASMbsEeCv0c7dRN89LA" name="mb" type="_AWSAa8bsEeCv0c7dRN89LA"/>
+      <ownedParameter xmi:id="_AWSAScbsEeCv0c7dRN89LA" name="ms" type="_AWSAasbsEeCv0c7dRN89LA"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_AWSASsbsEeCv0c7dRN89LA" name="GetMS" precondition="_AWSATcbsEeCv0c7dRN89LA" postcondition="_AWSAS8bsEeCv0c7dRN89LA" bodyCondition="_AWSAT8bsEeCv0c7dRN89LA">
+      <ownedRule xmi:id="_AWSAS8bsEeCv0c7dRN89LA" name="GetMSPost">
+        <nameExpression xmi:id="_AWSATMbsEeCv0c7dRN89LA" symbol="//@ ensures !Receiver(coll,mb) &amp;&amp; \result==mb.message;"/>
+      </ownedRule>
+      <ownedRule xmi:id="_AWSATcbsEeCv0c7dRN89LA" name="GetMSPre">
+        <nameExpression xmi:id="_AWSATsbsEeCv0c7dRN89LA" symbol="//@ requires Connected(coll,this) &amp;&amp; Receiver(coll,mb) &amp;&amp; this.mboxes.contains(mb);"/>
+      </ownedRule>
+      <ownedRule xmi:id="_AWSAT8bsEeCv0c7dRN89LA" name="GetMSBody">
+        <nameExpression xmi:id="_AWSAUMbsEeCv0c7dRN89LA" symbol="{ mb.receivers.remove(coll);&#xA;Message tempms=mb.message;&#xA;mb.message=null; &#xA;return tempms; }"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_AWSAUcbsEeCv0c7dRN89LA" name="coll" type="_AWSAZsbsEeCv0c7dRN89LA"/>
+      <ownedParameter xmi:id="_AWSAUsbsEeCv0c7dRN89LA" name="mb" type="_AWSAa8bsEeCv0c7dRN89LA"/>
+      <ownedParameter xmi:id="_AWSAU8bsEeCv0c7dRN89LA" type="_AWSAasbsEeCv0c7dRN89LA" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_AWSAVMbsEeCv0c7dRN89LA" name="Connected" bodyCondition="_AWSAVcbsEeCv0c7dRN89LA">
+      <ownedRule xmi:id="_AWSAVcbsEeCv0c7dRN89LA" name="ConnectedBody">
+        <nameExpression xmi:id="_AWSAVsbsEeCv0c7dRN89LA" symbol="{ return med.colleagues.contains(col); }"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_AWSAV8bsEeCv0c7dRN89LA" type="_AWSAI8bsEeCv0c7dRN89LA" direction="return"/>
+      <ownedParameter xmi:id="_AWSAWMbsEeCv0c7dRN89LA" name="col" type="_AWSAZsbsEeCv0c7dRN89LA"/>
+      <ownedParameter xmi:id="_AWSAWcbsEeCv0c7dRN89LA" name="med" type="_AWSAJMbsEeCv0c7dRN89LA"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_AWSAWsbsEeCv0c7dRN89LA" name="Sender" bodyCondition="_AWSAW8bsEeCv0c7dRN89LA">
+      <ownedRule xmi:id="_AWSAW8bsEeCv0c7dRN89LA" name="SenderBody">
+        <nameExpression xmi:id="_AWSAXMbsEeCv0c7dRN89LA" symbol="{ return mb.senders.contains(col); }"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_AWSAXcbsEeCv0c7dRN89LA" type="_AWSAI8bsEeCv0c7dRN89LA" direction="return"/>
+      <ownedParameter xmi:id="_AWSAXsbsEeCv0c7dRN89LA" name="col" type="_AWSAZsbsEeCv0c7dRN89LA"/>
+      <ownedParameter xmi:id="_AWSAX8bsEeCv0c7dRN89LA" name="mb" type="_AWSAa8bsEeCv0c7dRN89LA"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_AWSAYMbsEeCv0c7dRN89LA" name="Receiver" bodyCondition="_AWSAYcbsEeCv0c7dRN89LA">
+      <ownedRule xmi:id="_AWSAYcbsEeCv0c7dRN89LA" name="ReceiverBody">
+        <nameExpression xmi:id="_AWSAYsbsEeCv0c7dRN89LA" symbol="{ return mb.receivers.contains(col); }"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_AWSAY8bsEeCv0c7dRN89LA" type="_AWSAI8bsEeCv0c7dRN89LA" direction="return"/>
+      <ownedParameter xmi:id="_AWSAZMbsEeCv0c7dRN89LA" name="col" type="_AWSAZsbsEeCv0c7dRN89LA"/>
+      <ownedParameter xmi:id="_AWSAZcbsEeCv0c7dRN89LA" name="mb" type="_AWSAa8bsEeCv0c7dRN89LA"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_AWSAZsbsEeCv0c7dRN89LA" name="Colleague" isAbstract="true">
+    <ownedAttribute xmi:id="_AWSAZ8bsEeCv0c7dRN89LA" name="mediator" type="_AWSAJMbsEeCv0c7dRN89LA" association="_AWSAfcbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAaMbsEeCv0c7dRN89LA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAacbsEeCv0c7dRN89LA" value="1"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_AWSAasbsEeCv0c7dRN89LA" name="Message"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_AWSAa8bsEeCv0c7dRN89LA" name="MailBox">
+    <ownedAttribute xmi:id="_AWSAbMbsEeCv0c7dRN89LA" name="senders" type="_AWSAZsbsEeCv0c7dRN89LA" association="_AWSAdcbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAbcbsEeCv0c7dRN89LA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAbsbsEeCv0c7dRN89LA"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_AWSAb8bsEeCv0c7dRN89LA" name="receivers" type="_AWSAZsbsEeCv0c7dRN89LA" association="_AWSAecbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAcMbsEeCv0c7dRN89LA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAccbsEeCv0c7dRN89LA"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_AWSAcsbsEeCv0c7dRN89LA" name="message" type="_AWSAasbsEeCv0c7dRN89LA" association="_AWSAicbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAc8bsEeCv0c7dRN89LA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAdMbsEeCv0c7dRN89LA" value="1"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_AWSAdcbsEeCv0c7dRN89LA" memberEnd="_AWSAdsbsEeCv0c7dRN89LA _AWSAbMbsEeCv0c7dRN89LA">
+    <ownedEnd xmi:id="_AWSAdsbsEeCv0c7dRN89LA" name="" type="_AWSAa8bsEeCv0c7dRN89LA" association="_AWSAdcbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAd8bsEeCv0c7dRN89LA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAeMbsEeCv0c7dRN89LA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_AWSAecbsEeCv0c7dRN89LA" memberEnd="_AWSAesbsEeCv0c7dRN89LA _AWSAb8bsEeCv0c7dRN89LA">
+    <ownedEnd xmi:id="_AWSAesbsEeCv0c7dRN89LA" name="" type="_AWSAa8bsEeCv0c7dRN89LA" association="_AWSAecbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAe8bsEeCv0c7dRN89LA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAfMbsEeCv0c7dRN89LA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_AWSAfcbsEeCv0c7dRN89LA" memberEnd="_AWSAfsbsEeCv0c7dRN89LA _AWSAZ8bsEeCv0c7dRN89LA">
+    <ownedEnd xmi:id="_AWSAfsbsEeCv0c7dRN89LA" name="" type="_AWSAZsbsEeCv0c7dRN89LA" association="_AWSAfcbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAf8bsEeCv0c7dRN89LA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAgMbsEeCv0c7dRN89LA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_AWSAgcbsEeCv0c7dRN89LA" memberEnd="_AWSAgsbsEeCv0c7dRN89LA _AWSAJcbsEeCv0c7dRN89LA">
+    <ownedEnd xmi:id="_AWSAgsbsEeCv0c7dRN89LA" name="" type="_AWSAJMbsEeCv0c7dRN89LA" association="_AWSAgcbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAg8bsEeCv0c7dRN89LA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAhMbsEeCv0c7dRN89LA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_AWSAhcbsEeCv0c7dRN89LA" memberEnd="_AWSAhsbsEeCv0c7dRN89LA _AWSAKMbsEeCv0c7dRN89LA">
+    <ownedEnd xmi:id="_AWSAhsbsEeCv0c7dRN89LA" name="" type="_AWSAJMbsEeCv0c7dRN89LA" association="_AWSAhcbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAh8bsEeCv0c7dRN89LA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAiMbsEeCv0c7dRN89LA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_AWSAicbsEeCv0c7dRN89LA" memberEnd="_AWSAisbsEeCv0c7dRN89LA _AWSAcsbsEeCv0c7dRN89LA">
+    <ownedEnd xmi:id="_AWSAisbsEeCv0c7dRN89LA" name="" type="_AWSAa8bsEeCv0c7dRN89LA" association="_AWSAicbsEeCv0c7dRN89LA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_AWSAi8bsEeCv0c7dRN89LA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_AWSAjMbsEeCv0c7dRN89LA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_AWSAjcbsEeCv0c7dRN89LA" name="ConColleague1">
+    <generalization xmi:id="_AWSAjsbsEeCv0c7dRN89LA" general="_AWSAZsbsEeCv0c7dRN89LA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_AWSAj8bsEeCv0c7dRN89LA" name="ConColleague2">
+    <generalization xmi:id="_AWSAkMbsEeCv0c7dRN89LA" general="_AWSAZsbsEeCv0c7dRN89LA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_AWSAkcbsEeCv0c7dRN89LA" name="ConMediator1">
+    <generalization xmi:id="_AWSAksbsEeCv0c7dRN89LA" general="_AWSAJMbsEeCv0c7dRN89LA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_AWSAk8bsEeCv0c7dRN89LA" name="ConMediator2">
+    <generalization xmi:id="_AWSAlMbsEeCv0c7dRN89LA" general="_AWSAJMbsEeCv0c7dRN89LA"/>
+  </packagedElement>
+</uml:Model>

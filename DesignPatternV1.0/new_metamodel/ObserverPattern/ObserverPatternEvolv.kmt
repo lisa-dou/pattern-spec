@@ -1,0 +1,232 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "ObserverPatternStruct.kmt"
+ 
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class ObserverPattern inherits DesignPattern
+{
+    // The Specification of CreateConcreteObserver
+	operation AddConcreteObserver(
+	ConObs : uml::Class, 
+	ConObsSt : uml::Property,
+	ConObsStType : uml::Type, 
+	ConObsUpdOp : uml::Operation,
+	LisToSub : uml::Class) : Void 
+	pre AddConObsPre is 
+	do
+	  not self.ConObss.contains(ConObs) and
+	  not self.ConObsSts.contains(ConObsSt) and
+	  not (ConObsStType==void) and
+	  NotNull(ConObs.name) and NotNull(ConObsSt.name) and 
+      self.ConSubs.contains(LisToSub)
+	end
+	post AddConObsPost is
+	do
+	  self.ConObss.contains(ConObs) and
+	  self.ConObsSts.contains(ConObsSt) and
+	  Inherit(ConObs,self.Observer) and
+	  HasAttribute(ConObs,ConObsSt) and
+	  HasOperation(ConObs,ConObsUpdOp) and
+	  self.ConobsAsConsub.exists{asso|HasAssociation(ConObs,asso,LisToSub)}
+	end
+	is
+	do	         
+	    // 1.Add ConObs to Concrete Observer Set ConObss
+	    self.umlModel.packagedElement.add(ConObs)	
+	    self.ConObss.add(ConObs)	  		 
+
+		// 2.Add ConObsSts to ConObsSt
+		ConObsSt.type:=ConObsStType
+		self.ConObsSts.add(ConObsSt)		
+		// 3.
+		createGeneralization(ConObs, self.Observer)		
+		// 4. 
+		ConObs.ownedAttribute.add(ConObsSt)		
+				 
+		// 5.
+		var newasso:uml::Association init Association.new
+		newasso:=createAssociation(self.umlModel,
+		   ConObs,"",1,1,false,AggregationKind.none,
+           LisToSub,"subject",1,1,true,AggregationKind.none)
+        self.ConobsAsConsub.add(newasso)  
+        // 6.
+        ConObs.ownedOperation.add(ConObsUpdOp)        
+        self.ConObsUpdOps.add(ConObsUpdOp)
+        
+        
+        // 7. Add Dynamic relation : Updated(Subject sub, Observer obs)
+        var newupdated:Operation init Operation.new
+		newupdated.name:="Updated"
+		self.ConUpdated.add(newupdated)
+		ConObs.ownedOperation.add(newupdated)
+        setRetType(newupdated,self.BoolPrimType)
+        
+        /*
+          var newupdated:Operation init Operation.new
+		  newupdated.name:="Updated"
+		  self.ConUpdated.add(newupdated)
+		  ConObs.ownedOperation.add(newupdated)
+		  var par1:Parameter init Parameter.new
+		  var par2:Parameter init Parameter.new  
+		  par1.name:="sub"
+		  par2.name:="obs"
+		  par1.type:=LisToSub
+		  par2.type:=ConObs				    		  
+		  newupdated.ownedParameter.add(par1)
+		  newupdated.ownedParameter.add(par2)
+		  self.ConUpdatedParas1.add(par1)
+		  self.ConUpdatedParas2.add(par2)
+		  setRetType(newupdated,self.BoolPrimType)
+		*/ 
+	end
+
+    operation AddConcreteObserverE( 
+	ConObsName : String, 
+	ConObsStName : String, 
+	ConObsStType : uml::Type, 
+	ConObsUpdOpName :String,
+	LisToSub : uml::Class) : uml::Class[1..1] 
+	pre AddConObsE is
+	do	
+	  NotNull(ConObsName) and NoConflict(ConObsName, self.ConSubs)
+	end
+	is
+	do
+	  var c:uml::Class init uml::Class.new	    
+	    c.name:=ConObsName
+	    
+	  var p:uml::Property init uml::Property.new
+	  if Null(ConObsStName) 
+	  then
+	    ConObsStName:="conObsState"
+	  end
+	  p.name:=ConObsStName
+	  
+	  var op:uml::Operation init uml::Operation.new
+	  if Null(ConObsUpdOpName)
+	  then
+	    ConObsUpdOpName:="Update"
+	  end
+	  op.name:=ConObsUpdOpName
+	  
+	  AddConcreteObserver(c,p,ConObsStType,op,LisToSub) 
+	  result:=c 	    
+	end
+	
+
+    operation AddConcreteSubject(
+            ConSub : uml::Class, 
+			ConSubSt : uml::Property, 
+			ConSubStTy : uml::Type, 
+			ConSubGetStOp : uml::Operation, 
+			ConSubSetStOp : uml::Operation) : Void 
+	pre AddConSubPre is 
+	do
+	  not self.ConSubs.contains(ConSub) and
+	  not self.ConSubSts.contains(ConSubSt) and
+	  not self.ConSubGetStOps.contains(ConSubGetStOp) and
+	  not self.ConSubSetStOps.contains(ConSubSetStOp) and
+	  not (ConSubStTy==void) and
+	  NotNull(ConSub.name) and NotNull(ConSubSt.name) and 
+	  NotNull(ConSubGetStOp.name) and NotNull(ConSubSetStOp.name)
+	end
+	post AddConSubPost is
+	do
+	  self.ConSubs.contains(ConSub) and
+	  self.ConSubSts.contains(ConSubSt) and
+	  self.ConSubGetStOps.contains(ConSubGetStOp) and
+	  self.ConSubSetStOps.contains(ConSubSetStOp) and
+	  Inherit(ConSub, self.Subject) and
+	  HasAttribute(ConSub, ConSubSt) and
+	  HasOperation(ConSub, ConSubGetStOp) and
+	  HasOperation(ConSub, ConSubSetStOp)
+	end
+	is
+	do	        
+	    //1. Add the new Concrete Subject to the ConSubjects set	
+	    self.umlModel.packagedElement.add(ConSub)	
+	    self.ConSubs.add(ConSub)
+	    
+		//2. Add property for conSub and self.ConSubSts to satisfy the Invariant		
+		ConSubSt.type:= ConSubStTy
+		ConSub.ownedAttribute.add(ConSubSt)
+		self.ConSubSts.add(ConSubSt)
+		
+		//3. Add Generalization from conSub to the Subject 
+		createGeneralization(ConSub, self.Subject)
+
+		//4. Add the GetState Operation for the conSub
+		// The Order matters: First Create subject state, and then Create the Get and Set methods			
+		setRetType(ConSubGetStOp,ConSubStTy)
+		ConSub.ownedOperation.add(ConSubGetStOp)	
+		self.ConSubGetStOps.add(ConSubGetStOp)
+		
+		//5. Add the SetState Operation for the conSub
+		createParameter(ConSubSetStOp,"value",ConSubStTy)
+		ConSub.ownedOperation.add(ConSubSetStOp)
+		self.ConSubSetStOps.add(ConSubSetStOp)		
+	end
+    
+    
+    
+	operation AddConcreteSubjectE(
+			conSubName : String, 
+			conSubStName : String, 
+			conSubStTy : uml::Type, 
+			conSubGetStOpName : String, 
+			conSubSetStOpName : String) : uml::Class[1..1] 		
+	pre AddConSubEpre is
+	do
+	  NotNull(conSubName) and NoConflict(conSubName, self.ConSubs)
+	end
+	is 	
+	do	     	    	    
+	    var c:uml::Class init uml::Class.new	    
+	    c.name:=conSubName
+	    
+	    var p:uml::Property init uml::Property.new
+	    if Null(conSubStName) 
+	    then
+	      conSubStName:="conSubState"
+	    end
+	    p.name:=conSubStName
+	    
+	    var op1:uml::Operation init uml::Operation.new
+	    if Null(conSubGetStOpName) 
+	    then
+	      conSubGetStOpName:="GetState"
+	    end
+	    op1.name:=conSubGetStOpName
+	    
+	    var op2:uml::Operation init uml::Operation.new
+	    if Null(conSubSetStOpName) 
+	    then
+	      conSubSetStOpName:="SetState"
+	    end
+	    op2.name:=conSubSetStOpName
+	    
+	    AddConcreteSubject(c,p,conSubStTy,op1,op2)
+	    
+	    result:=c
+	end
+   
+   
+   
+}
+
+

@@ -1,0 +1,60 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "MediatorPatternStruct.kmt"
+ 
+ 
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class MediatorPattern inherits DesignPattern
+{
+    // Add a concrete mediator
+    operation AddConcreteMediator(ConMed:uml::Class):Void is
+	do	         	    
+	    self.umlModel.packagedElement.add(ConMed)	
+	    self.ConMeds.add(ConMed)	  		
+	    createGeneralization(ConMed, self.Mediator)	
+	end
+	
+	operation AddConcreteMediatorE(ConMedN:String):uml::Class is 
+	do	         	    
+	    var newconmed:uml::Class init uml::Class.new
+	    newconmed.name:=ConMedN
+	    AddConcreteMediator(newconmed)		
+	    result:=newconmed
+	end
+	
+	// Add a concrete colleague
+	operation AddConcreteColleague(ConCol:uml::Class):Void is
+	do
+	    self.umlModel.packagedElement.add(ConCol)	
+	    self.ConMeds.add(ConCol)
+	    createGeneralization(ConCol, self.Colleague)
+	end    
+	
+	operation AddConcreteColleagueE(ConColN:String):uml::Class is
+	do	         	    
+	    var newconcol:uml::Class init uml::Class.new
+	    newconcol.name:=ConColN
+	    AddConcreteColleague(newconcol)		
+	    result:=newconcol
+	end
+	
+	
+     	    
+}
+
+

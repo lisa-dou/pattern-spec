@@ -1,0 +1,46 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+
+package uml;
+
+
+require kermeta
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+//Importing the aspects of Observer pattern
+require "ObserverPattern/ObserverPatternStruct.kmt" 
+require "ObserverPattern/ObserverPatternInit.kmt"  
+require "ObserverPattern/ObserverPatternEvolv.kmt" 
+require "ObserverPattern/ObserverPatternBehavior.kmt" 
+
+//Importing the aspects of Factory Method pattern
+require "FactoryMethodPattern/FactoryMethodPatternStruct.kmt" 
+require "FactoryMethodPattern/FactoryMethodPatternInit.kmt"
+require "FactoryMethodPattern/FactoryMethodPatternEvolve.kmt"
+require "FactoryMethodPattern/FactoryMethodPatternBehavior.kmt" 
+
+//Importing the aspects of Composite pattern
+require "CompositePattern/CompositePatternStruct.kmt"
+require "CompositePattern/CompositePatternInit.kmt" 
+require "CompositePattern/CompositePatternEvolve.kmt" 
+require "CompositePattern/CompositePatternBehavior.kmt"
+
+//Importing the aspects of Mediator pattern
+require "MediatorPattern/MediatorPatternStruct.kmt"
+require "MediatorPattern/MediatorPatternInit.kmt"
+require "MediatorPattern/MediatorPatternEvolv.kmt"
+require "MediatorPattern/MediatorPatternBehavior.kmt" 
+
+
+
+using designPatterns
+
+
+
+
+
+      

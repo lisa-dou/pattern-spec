@@ -1,0 +1,235 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt" 
+require "MediatorPatternStruct.kmt"
+ 
+ 
+using kermeta::standard
+using kermeta::persistence
+using uml 
+ 
+
+aspect class MediatorPattern inherits DesignPattern
+{
+    method CreatePatternSpecification() : Void is 
+    do
+        // Helpers
+        var mboxesEnd:uml::Property init uml::Property.new
+        mboxesEnd:=self.getAssoEndWithType(self.AbsMedMboxAsso, self.MailBox)
+        var messEnd:uml::Property init uml::Property.new
+        messEnd:=self.getAssoEndWithType(self.MbAssoMess, self.Message)
+        var collEnd:uml::Property init uml::Property.new
+        collEnd:=self.getAssoEndWithType(self.AbsMedColAsso, self.Colleague)
+        var senderEnd:uml::Property init uml::Property.new
+        senderEnd:=self.getAssoEndWithType(self.MbAssoSnd, self.Colleague)
+        var receiverEnd:uml::Property init uml::Property.new
+        receiverEnd:=self.getAssoEndWithType(self.MbAssoRec, self.Colleague)
+        
+        // Pattern-Related Operations' Specification 
+        // s1. Connect Operation Pre
+        var connectPreSymbol:String 
+        connectPreSymbol:="//@ requires "+
+          "!"+ self.Connected.name+"("+ self.ConPara1.name+","+"this"+")"+" && "+
+          "!"+ self.Sender.name+"("+ self.ConPara1.name+","+ self.ConPara2.name+")"+" && "+
+          "this."+mboxesEnd.name +".contains"+"("+ self.ConPara2.name+");" 
+        self.CreateSpec(self.Connect, "Pre", connectPreSymbol)
+          
+        // s2. Connect Operation Post
+        var connectPostSymbol:String
+        connectPostSymbol:="//@ ensures "+
+          self.Connected.name+"("+ self.ConPara1.name+","+"this"+")"+" && "+
+          self.Sender.name+"("+ self.ConPara1.name+","+ self.ConPara2.name+");"
+        self.CreateSpec(self.Connect, "Post", connectPostSymbol)   
+        
+        // s3. Disconnect Operation Pre
+        var disconPreSymbol:String
+        disconPreSymbol:="//@ requires "+
+          self.Connected.name+"("+ self.DisconPara1.name+","+"this"+")"+" && "+
+          self.Sender.name+"("+ self.DisconPara1.name+","+ self.DisconPara2.name+")"+" && "+
+          "this."+mboxesEnd.name +".contains"+"("+ self.DisconPara2.name+");"
+        self.CreateSpec(self.Disconnect, "Pre", disconPreSymbol)
+          
+        // s4. Disconnect Operation Post
+        var disconPostSymbol:String
+        disconPostSymbol:="//@ ensures "+
+          "!"+ self.Connected.name+"("+ self.DisconPara1.name+","+"this"+")"+" && "+
+          "!"+ self.Sender.name+"("+ self.DisconPara1.name+","+ self.DisconPara2.name+")"+" && "+
+          "(\\forall "+mboxesEnd.type.name+ " mbvar; "+ mboxesEnd.name+".contains(mbvar)==>"+
+                " !"+self.Receiver.name+"("+ self.DisconPara1.name+",mbvar));"
+        self.CreateSpec(self.Disconnect, "Post", disconPostSymbol)     
+        
+        // s5. PutMs Operation Pre
+        var putmsPreSymbol:String
+        putmsPreSymbol:="//@ requires "+
+          self.Connected.name+"("+ self.PutPara1.name+","+"this"+")"+" && "+
+          "(\\forall "+ self.PutPara2.type.name +" tovar; "+ self.PutPara2.name+".contains(tovar)==>"+
+            self.Connected.name+"(tovar,this))"+" && " +
+          self.Sender.name+"("+ self.PutPara1.name+","+ self.PutPara3.name+")"+" && "+
+          "this."+mboxesEnd.name +".contains"+"("+ self.PutPara3.name+");"
+          //+" && "+self.PutPara3.name+"."+messEnd.name+"==null;"
+        self.CreateSpec(self.PutMs, "Pre", putmsPreSymbol)     
+        
+        // s6. PutMs Operation Post
+        var putmsPostSymbol:String
+        putmsPostSymbol:="//@ ensures "+
+          "(\\forall "+ self.PutPara2.type.name +" tovar; "+ self.PutPara2.name+".contains(tovar)==>"+
+            self.Receiver.name+"(tovar,"+ self.PutPara3.name+ "))"+" && "+                 
+          self.PutPara3.name+"."+messEnd.name+"=="+ self.PutPara4.name+";"
+        self.CreateSpec(self.PutMs, "Post", putmsPostSymbol)  
+        
+        // s7. GetMs Operation Pre
+        var getmsPreSymbol:String
+        getmsPreSymbol:="//@ requires "+
+          self.Connected.name+"("+ self.GetPara1.name+","+"this"+")"+" && "+
+          self.Receiver.name+"("+ self.GetPara1.name+","+ self.GetPara2.name+")"+" && "+
+          "this."+mboxesEnd.name +".contains"+"("+ self.GetPara2.name+");"
+          //"+" && "+ self.GetPara2.name+"."+messEnd.name+"!=null;"
+        self.CreateSpec(self.GetMs, "Pre", getmsPreSymbol)   
+        
+        // s8. GetMs Operation Post
+        var getmsPostSymbol:String
+        getmsPostSymbol:="//@ ensures "+
+          "!"+self.Receiver.name+"("+ self.GetPara1.name+","+ self.GetPara2.name+")"+" && "+
+          "\\result==" + self.GetPara2.name+"."+messEnd.name+";"       
+        self.CreateSpec(self.GetMs, "Post", getmsPostSymbol) 
+        
+        // Dynamic Relations' Implementation
+        // i1: Connected(Colleague c,Mediator m)
+        var connectedImp:String
+        connectedImp:="{ return "+ self.ContdPara2.name+"."+
+            collEnd.name+".contains("+ self.ContdPara1.name+"); }"   
+        self.CreateSpec(self.Connected, "Body", connectedImp) 
+        
+        // i2: Sender(Colleague c,MailBox m)
+        var senderImp:String
+        senderImp:="{ return "+
+          self.SndPara2.name+"."+senderEnd.name +".contains("+ self.SndPara1.name+"); }"   
+        self.CreateSpec(self.Sender, "Body", senderImp) 
+        
+        // i3: Receiver(Colleague c,MailBox m)
+        var receiverImp:String
+        receiverImp:="{ return "+ 
+          self.RecPara2.name+"."+receiverEnd.name+ ".contains("+ self.RecPara1.name+"); }"   
+        self.CreateSpec(self.Receiver, "Body", receiverImp) 
+        
+        // i4. Connect(Colleague c, MailBox m)
+        var connectImp:String
+        connectImp:=
+          "{ this."+ collEnd.name+".add("+ self.ConPara1.name+")"+"; "+"\n"+
+          self.ConPara2.name+"."+ senderEnd.name+".add("+ self.ConPara1.name+")"+"; }"
+        self.CreateSpec(self.Connect, "Body", connectImp) 
+        
+         // i5. Disconnect(Colleague c, MailBox m)
+        var disconnectImp:String
+        disconnectImp:=
+          "{ this."+ collEnd.name+".remove("+ self.ConPara1.name+")"+"; \n"+ 
+          "for(Iterator<"+ self.MailBox.name + "> itmb=this."+ mboxesEnd.name + ".iterator(); "+
+            "itmb.hasNext();)"+"\n"  +
+          "{ "+ self.MailBox.name+" tempmb="+" itmb.next();"+"\n"+
+          "tempmb."+ receiverEnd.name+".remove("+ self.ConPara1.name+");} }" 
+        self.CreateSpec(self.Disconnect, "Body", disconnectImp) 
+              
+         // i6. PutMs(Colleague from, Set<Colleague> to, MailBox mb, Message ms)
+        var putmsImp:String
+        putmsImp:=
+          "{ "+ self.PutPara3.name+"."+ messEnd.name + "=" + self.PutPara4.name + "; \n" +         
+          "for(Iterator<"+ self.Colleague.name + "> itcol="+ self.PutPara2.name + ".iterator(); "+
+            "itcol.hasNext();)"+"\n" + 
+          "{ "+ self.Colleague.name +" tempcol="+" itcol.next();"+"\n"+
+          self.PutPara3.name +"."+ receiverEnd.name+".add(tempcol);}}" 
+        self.CreateSpec(self.PutMs, "Body", putmsImp)               
+        
+         // i7. GetMs(Colleague c, MailBox mb)
+        var getmsImp:String
+        getmsImp:=
+          "{ "+ self.GetPara2.name+"."+ receiverEnd.name+".remove("+ self.GetPara1.name + ");"+"\n"+
+          self.Message.name + " tempms="+ self.GetPara2.name+"."+messEnd.name + ";"+"\n"+
+          self.GetPara2.name+"."+messEnd.name + "=null; \n"+
+          "return tempms; }"
+        self.CreateSpec(self.GetMs, "Body", getmsImp) 
+        
+        /*
+        // s1. Connect Operation Pre
+        var connectPreSymbol:String 
+        connectPreSymbol:=
+          "not "+ self.Connected.name+"("+ self.ConPara1.name+","+"self"+")"+" and "+
+          "not "+ self.Sender.name+"("+ self.ConPara1.name+","+ self.ConPara2.name+")"+" and "+
+          "self."+mboxesEnd.name +"->"+"includes"+"("+ self.ConPara2.name+")" 
+        self.CreateSpec(self.Connect, "Pre", connectPreSymbol)
+          
+        // s2. Connect Operation Post
+        var connectPostSymbol:String
+        connectPostSymbol:=
+          self.Connected.name+"("+ self.ConPara1.name+","+"self"+")"+" and "+
+          self.Sender.name+"("+ self.ConPara1.name+","+ self.ConPara2.name+")"
+        self.CreateSpec(self.Connect, "Post", connectPostSymbol)   
+        
+        // s3. Disconnect Operation Pre
+        var disconPreSymbol:String
+        disconPreSymbol:=
+          self.Connected.name+"("+ self.DisconPara1.name+","+"self"+")"+" and "+
+          self.Sender.name+"("+ self.DisconPara1.name+","+ self.DisconPara2.name+")"+" and "+
+          "self."+mboxesEnd.name +"->"+"includes"+"("+ self.DisconPara2.name+")"
+        self.CreateSpec(self.Disconnect, "Pre", disconPreSymbol)
+          
+        // s4. Disconnect Operation Post
+        var disconPostSymbol:String
+        disconPostSymbol:=
+          "not "+ self.Connected.name+"("+ self.DisconPara1.name+","+"self"+")"+" and "+
+          "not "+ self.Sender.name+"("+ self.DisconPara1.name+","+ self.DisconPara2.name+")"+" and "+
+          "self."+mboxesEnd.name+"->forAll(mbvar|not "+ 
+                self.Receiver.name+"("+ self.DisconPara1.name+",mbvar))"
+        self.CreateSpec(self.Disconnect, "Post", disconPostSymbol)     
+        
+        // s5. PutMs Operation Pre
+        var putmsPreSymbol:String
+        putmsPreSymbol:=
+          self.Connected.name+"("+ self.PutPara1.name+","+"self"+")"+" and "+
+          self.PutPara2.name+"->forAll(tovar|"+ self.Connected.name+"(tovar,self))"+" and "+
+          self.Sender.name+"("+ self.PutPara1.name+","+ self.PutPara3.name+")"+" and "+
+          "self."+mboxesEnd.name +"->"+"includes"+"("+ self.PutPara3.name+")"+" and "+
+          self.PutPara3.name+"."+messEnd.name+"=null"
+        self.CreateSpec(self.PutMs, "Pre", putmsPreSymbol)     
+        
+        // s6. PutMs Operation Post
+        var putmsPostSymbol:String
+        putmsPostSymbol:=
+          self.PutPara2.name+"->forAll(tovar|"+ 
+                self.Receiver.name+"(tovar,"+ self.PutPara3.name+ "))"+" and "+     
+          self.PutPara3.name+"."+messEnd.name+"="+ self.PutPara4.name
+        self.CreateSpec(self.PutMs, "Post", putmsPostSymbol)  
+        
+        // s7. GetMs Operation Pre
+        var getmsPreSymbol:String
+        getmsPreSymbol:=
+          self.Connected.name+"("+ self.GetPara1.name+","+"self"+")"+" and "+
+          self.Receiver.name+"("+ self.GetPara1.name+","+ self.GetPara2.name+")"+" and "+
+          "self."+mboxesEnd.name +"->"+"includes"+"("+ self.GetPara2.name+")"+" and "+
+          self.GetPara2.name+"."+messEnd.name+"<>null"
+        self.CreateSpec(self.GetMs, "Pre", getmsPreSymbol)   
+        
+        // s8. GetMs Operation Post
+        var getmsPostSymbol:String
+        getmsPostSymbol:=
+          "not "+self.Receiver.name+"("+ self.GetPara1.name+","+ self.GetPara2.name+")"+" and "+
+          self.GetPara2.name+"."+messEnd.name+"=null"+" and "+
+          "result="+self.GetPara2.name+"."+messEnd.name+"@pre"        
+        self.CreateSpec(self.GetMs, "Post", getmsPostSymbol) 
+        */
+        
+      
+    end
+     	    
+}
+
+

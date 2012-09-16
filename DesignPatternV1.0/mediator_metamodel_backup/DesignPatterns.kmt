@@ -1,0 +1,140 @@
+@uri "designPatterns.liuqiang"
+package designPatterns;
+
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+
+abstract class DesignPattern inherits uml::Model
+{
+	reference IntPrimType : uml::PrimitiveType[1..1]
+
+	reference StringPrimType : uml::PrimitiveType[1..1]
+
+	reference BoolPrimType : uml::PrimitiveType[1..1]
+
+	reference umlModel : uml::Model[1..1]
+
+	reference patternProfile : uml::Profile[1..1]
+
+	reference Map : uml::Class[1..1]
+
+	operation SaveAsUML(uri : ecore::EString) : Void is
+		abstract
+
+	operation CreateInitialPatternStructure() : DesignPattern[1..1] is
+		abstract
+
+	operation CreatePrimitiveTypes() : ecore::EJavaObject is
+		abstract
+
+	operation ApplyPatternProfile() : Void is
+		abstract
+
+	operation CreatePatternSpecification() : Void is
+		abstract
+
+}
+class ObserverPattern inherits DesignPattern
+{
+	reference Observer : uml::Class[1..1]
+
+	reference ConcreteObservers : uml::Class[0..*]
+
+	reference Subject : uml::Class[1..1]
+
+	reference ConcreteSubjects : uml::Class[0..*]
+
+	reference ConcreteObserverStates : uml::Property[0..*]
+
+	reference ConcreteSubjectStates : uml::Property[0..*]
+
+	reference Attach : uml::Operation[1..1]
+
+	reference AttachPara : uml::Parameter[1..1]
+
+	reference Detach : uml::Operation[1..1]
+
+	reference DetachPara : uml::Parameter[1..1]
+
+	reference Notify : uml::Operation[1..1]
+
+	reference Update : uml::Operation[1..1]
+
+	reference ConcreteSubjectGetStateOps : uml::Operation[0..*]
+
+	reference ConcreteSubjectSetStateOps : uml::Operation[0..*]
+
+	reference ConcreteObserversUpdateOps : uml::Operation[0..*]
+
+	reference SubjectAsso_observers : uml::Association[1..1]
+
+	reference ConcreteObserverAssos_subject : uml::Association[0..*]
+
+	reference Pattern_Predicates : uml::Class[1..1]
+
+	reference Pattern_Attached : uml::Operation[1..1]
+
+	reference Pattern_Updated : uml::Operation[1..1]
+
+	operation GetSubjectState(OP : ObserverPattern, subject : uml::Class) : uml::Property[1..1] is
+		abstract
+
+	operation AddConcreteObserver(conObserverName : ecore::EString, observerStateName : ecore::EString, observerStateType : uml::Type, ListentoSubject : uml::Class) : uml::Class[1..1] is
+		abstract
+
+	operation AddConcreteSubject(conSubjectName : ecore::EString, subjectStateName : ecore::EString, subjectStateType : uml::Type, GetStateOpName : ecore::EString, SetStateOpName : ecore::EString) : uml::Class[1..1] is
+		abstract
+
+	operation GetListeningTo(conObserver : uml::Class) : uml::Property is
+		abstract
+
+}
+class MediatorPattern inherits DesignPattern
+{
+	reference Mediator : uml::Class[1..1]
+
+	reference Colleague : uml::Class[1..1]
+
+	reference ConcreteMediators : uml::Class[0..*]
+
+	reference ConcreteColleagues : uml::Class[0..*]
+
+	reference ColleagueMapping : uml::Property[1..1]
+
+	reference Register : uml::Operation[1..1]
+
+	reference RegisterPara1 : uml::Parameter[1..1]
+
+	reference RegisterPara2 : uml::Parameter[1..1]
+
+	reference Unregister : uml::Operation[1..1]
+
+	reference UnregisterPara1 : uml::Parameter[1..1]
+
+	reference UnregisterPara2 : uml::Parameter[1..1]
+
+	reference Notify : uml::Operation[1..1]
+
+	reference ConcreteMediatorAsso_colleague : uml::Association
+
+	reference ConcreteMediatorRegisterOps : uml::Operation[0..*]
+
+	reference ConcreteMediatorUnregisterOps : uml::Operation[0..*]
+
+	reference ConcreteMediatorNotifyOps : uml::Operation[0..*]
+
+	reference Pattern_Registered : uml::Operation[1..1]
+
+	reference Pattern_Predicates : uml::Class[1..1]
+
+	reference Pattern_Mediated : uml::Operation[1..1]
+
+	reference Criteria : uml::Operation[1..1]
+
+	operation AddConcreteMediator() : Void is
+		abstract
+
+	operation AddConcreteColleague() : Void is
+		abstract
+
+}

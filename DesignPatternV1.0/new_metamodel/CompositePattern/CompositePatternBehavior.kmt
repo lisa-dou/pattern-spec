@@ -1,0 +1,109 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "CompositePatternStruct.kmt" 
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class CompositePattern inherits DesignPattern 
+{    	   
+    method CreatePatternSpecification() : Void is 
+    do
+         // Implementation for Add operation
+         self.ComAdds.each{addop|
+         var owningclass:uml::Class init uml::Class.new
+         owningclass:=self.GetClass(addop, self.Composites)
+         
+         var theasso:uml::Association init uml::Association.new
+         theasso:=self.GetAssoByClass(owningclass, self.CpsAssCpn)
+         
+         var chldend:uml::Property init uml::Property.new
+         chldend:=self.getTheOtherAssoEndWithType(theasso, owningclass)
+         
+         var childrenName:String
+         childrenName:=chldend.name
+         
+         var addpara:uml::Parameter init uml::Parameter.new
+         addpara:=self.GetPara(addop, self.ComAddsPas)
+         
+         var addparaName:String
+         addparaName:=addpara.name
+         
+         var addImpSymbol:String 
+         addImpSymbol:=
+           "{ this."+ childrenName +".add("+addparaName+");}"
+         self.CreateSpec(addop, "Body", addImpSymbol)  
+         } 	
+         
+         // Implementation for Remove
+         self.ComRemoves.each{removeop|
+         var owningclass:uml::Class init uml::Class.new
+         owningclass:=self.GetClass(removeop, self.Composites)
+         
+         var theasso:uml::Association init uml::Association.new
+         theasso:=self.GetAssoByClass(owningclass, self.CpsAssCpn)
+         
+         var chldend:uml::Property init uml::Property.new
+         chldend:=self.getTheOtherAssoEndWithType(theasso, owningclass)
+         
+         var childrenName:String
+         childrenName:=chldend.name
+         
+         var removepara:uml::Parameter init uml::Parameter.new
+         removepara:=self.GetPara(removeop, self.ComRemovesPas)
+         
+         var remparaName:String
+         remparaName:=removepara.name
+         
+         var remImpSymbol:String 
+         remImpSymbol:=
+           "{ this."+ childrenName +".remove("+remparaName+");}"
+         self.CreateSpec(removeop, "Body", remImpSymbol)  
+         } 	
+         
+         // Implementation for GetChild
+         self.ComGetChildren.each{getop|
+         var owningclass:uml::Class init uml::Class.new
+         owningclass:=self.GetClass(getop, self.Composites)
+         
+         var theasso:uml::Association init uml::Association.new
+         theasso:=self.GetAssoByClass(owningclass, self.CpsAssCpn)
+         
+         var chldend:uml::Property init uml::Property.new
+         chldend:=self.getTheOtherAssoEndWithType(theasso, owningclass)
+         
+         var childrenName:String
+         childrenName:=chldend.name
+         
+         var getpara:uml::Parameter init uml::Parameter.new
+         getpara:=self.GetPara(getop, self.ComGetChildsPas)
+         
+         var getparaName:String
+         getparaName:=getpara.name
+         
+         var getImpSymbol:String 
+         getImpSymbol:=
+           "{ return this."+ childrenName +".get("+getparaName+");}"
+         self.CreateSpec(getop, "Body", getImpSymbol)  
+         } 	
+         
+         
+    end
+    
+       
+}
+
+

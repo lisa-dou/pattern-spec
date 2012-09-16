@@ -1,0 +1,71 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt" 
+
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+class FactoryMethodPattern inherits DesignPattern
+{ 
+    reference Creator:uml::Class[1..1]
+    reference ConCrts:uml::Class[0..*]
+    reference Product:uml::Class[1..1]
+    reference ConPdts:uml::Class[0..*]
+    reference FactoryMethod:uml::Operation[1..1]
+    reference ConFatMtds:uml::Operation[0..*]
+    reference ConCrtsDepConPdts:uml::Dependency[0..*]
+    
+    inv spec is  
+    do       
+       IsAbstract(self.Creator) and
+       IsAbstract(self.Product)  and   
+       Hierarchy(self.ConCrts, self.Creator) and
+       Hierarchy(self.ConPdts, self.Product) and       
+       HasOperation(self.Creator, self.FactoryMethod) and
+       IsAbstractOp(self.FactoryMethod) and
+	   HasOpOtO(self.ConCrts, self.ConFatMtds) and	   
+	   HasDepOtOtO(self.ConCrts, self.ConCrtsDepConPdts, self.ConPdts) and	   
+	   ReturnType(self.FactoryMethod, self.Product) 
+    end    	
+    
+    operation GetDependsOn(cls:uml::Class):uml::Class   
+    pre GetDependsOn is
+    do
+     self.ConCrtsDepConPdts.select{dep|dep.client.contains(cls)}.size==1
+    end
+    is
+    do
+     var thedep:uml::Dependency init uml::Dependency.new
+     thedep:=self.ConCrtsDepConPdts.select{dep|dep.client.contains(cls)}.at(0)
+     result:=thedep.supplier.asOrderedSet().at(0).asType(uml::Class)
+    end
+   
+   /*
+   operation GetListeningTo(cls : uml::Class) : uml::Property 
+   pre GetLisTo is
+   do
+     self.ConobsAsConsub.select{as|as.memberEnd.exists{me| me.type==cls}}.size==1
+   end
+   is
+   do
+     var asso:uml::Association init uml::Association.new
+     asso:=self.ConobsAsConsub.select{as|as.memberEnd.exists{me| me.type==cls}}.at(0)
+     result:=asso.memberEnd.select{me|me.type!=cls}.at(0)   
+   end
+   */  
+}
+
+

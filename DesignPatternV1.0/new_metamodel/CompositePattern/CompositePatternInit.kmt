@@ -1,0 +1,39 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "CompositePatternStruct.kmt" 
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class CompositePattern inherits DesignPattern 
+{ 
+    method CreateInitStruct():Void is
+    do
+        super()
+        //1  Component
+        self.Component:=createClass(umlModel,"Component",true)                    
+        //2  Add Operation
+        self.Add:=createOperation(self.Component,"Add",false)
+        self.Remove:=createOperation(self.Component,"Remove",false)     
+        self.GetChild:=createOperation(self.Component,"GetChild",false)
+        setRetType(self.GetChild, self.Component)
+        self.AddPa:=createParameter(self.Add,"component", self.Component) 
+        self.RemovePa:=createParameter(self.Remove,"component", self.Component)
+        self.GetChildPa:=createParameter(self.GetChild,"index", self.IntPrimType)               
+    end     	  
+}
+
+

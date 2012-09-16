@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/DesignPatternV0.1/src"
+    modelPluginID="DesignPatternV0.1" redirection="" modelName="DesignPatterns" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/plugin/org.eclipse.uml2.uml/model/UML.genmodel#//uml"
+    runtimePlatform="RCP">
+  <foreignModel>DesignPatterns.ecore</foreignModel>
+  <genPackages prefix="DesignPatterns" resource="XML" disposableProviderFactory="true"
+      ecorePackage="DesignPatterns.ecore#/">
+    <genClasses image="false" ecoreClass="DesignPatterns.ecore#//DesignPattern">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//DesignPattern/IntPrimType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//DesignPattern/StringPrimType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//DesignPattern/BoolPrimType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//DesignPattern/umlModel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//DesignPattern/patternProfile"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//DesignPattern/Map"/>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//DesignPattern/SaveAsUML">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//DesignPattern/SaveAsUML/uri"/>
+      </genOperations>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//DesignPattern/CreateInitialPatternStructure"/>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//DesignPattern/CreatePrimitiveTypes"/>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//DesignPattern/ApplyPatternProfile"/>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//DesignPattern/CreatePatternSpecification"/>
+    </genClasses>
+    <genClasses ecoreClass="DesignPatterns.ecore#//ObserverPattern">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/Observer"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/ConcreteObservers"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/Subject"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/ConcreteSubjects"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/ConcreteObserverStates"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/ConcreteSubjectStates"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/Attach"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/AttachPara"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/Detach"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/DetachPara"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/Notify"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/Update"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/ConcreteSubjectGetStateOps"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/ConcreteSubjectSetStateOps"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/ConcreteObserversUpdateOps"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/SubjectAsso_observers"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/ConcreteObserverAssos_subject"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/Pattern_Predicates"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/Pattern_Attached"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//ObserverPattern/Pattern_Updated"/>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//ObserverPattern/GetSubjectState">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/GetSubjectState/OP"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/GetSubjectState/subject"/>
+      </genOperations>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//ObserverPattern/CreateConcreteObserver">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/CreateConcreteObserver/conObserverName"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/CreateConcreteObserver/observerStateName"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/CreateConcreteObserver/observerStateType"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/CreateConcreteObserver/ListentoSubject"/>
+      </genOperations>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//ObserverPattern/CreateConcreteSubject">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/CreateConcreteSubject/conSubjectName"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/CreateConcreteSubject/subjectStateName"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/CreateConcreteSubject/subjectStateType"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/CreateConcreteSubject/GetStateOpName"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/CreateConcreteSubject/SetStateOpName"/>
+      </genOperations>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//ObserverPattern/GetListeningTo">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/GetListeningTo/conObserver"/>
+      </genOperations>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//ObserverPattern/AddConcreteObserver">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/AddConcreteObserver/class"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/AddConcreteObserver/observerStateName"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/AddConcreteObserver/observerStateType"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/AddConcreteObserver/ListentoSubject"/>
+      </genOperations>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//ObserverPattern/AddConcreteSubject">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/AddConcreteSubject/class"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/AddConcreteSubject/subjectStateName"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/AddConcreteSubject/subjectStateType"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/AddConcreteSubject/GetStateOpName"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//ObserverPattern/AddConcreteSubject/SetStateOpName"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="DesignPatterns.ecore#//MediatorPattern">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatorPattern/Mediator"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatorPattern/Colleague"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatorPattern/ConcreteMediators"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatorPattern/ConcreteColleagues"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatorPattern/ConcreteMediatorAsso_colleague"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatorPattern/CommunicationInterface"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatorPattern/ColleagueAsso_mediator"/>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//MediatorPattern/CreateConcreteMediator">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/CreateConcreteMediator/ConMediatorName"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/CreateConcreteMediator/ConColleagues"/>
+      </genOperations>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//MediatorPattern/CreateConcreteColleague">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/CreateConcreteColleague/ConColleagueName"/>
+      </genOperations>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//MediatorPattern/CreateCommunicationOp">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/CreateCommunicationOp/ConMediator"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/CreateCommunicationOp/OperationName"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/CreateCommunicationOp/ParameterNames"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/CreateCommunicationOp/ParameterTypes"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/CreateCommunicationOp/ReturnType"/>
+      </genOperations>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//MediatorPattern/AddConcreteColleage">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/AddConcreteColleage/class"/>
+      </genOperations>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//MediatorPattern/AddConcreteMediator">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/AddConcreteMediator/class"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatorPattern/AddConcreteMediator/ConColleagues"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="DesignPatterns.ecore#//MediatedObserverPattern">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ObserverPattern"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/MediatorPattern"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ChangeManager"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/MediatedSubject"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/MediatedObserver"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ConcreteChangeManagers"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ConcreteMediatedSubjects"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ConcreteMediatedObservers"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/AttachOp"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/AttachPara"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/DetachOp"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/DetachPara"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/SubjectNotifyOp"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/RegisterOp"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/RegisterOpPara1"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/RegisterOpPara2"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/UnRegisterOp"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/UnRegisterOpPara1"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/UnRegisterOpPara2"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ChangeManagerNotifyOp"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/SubToObsMapping"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/MediatedObserverUpdateOp"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ConcreteMediatedSubjectGetStateOps"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ConcreteMediatedSubjectSetStateOps"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ConcreteMediatedObserverUpdateOps"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ConcreteMediatedObserverStates"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DesignPatterns.ecore#//MediatedObserverPattern/ConcreteMediatedSubjectStates"/>
+      <genOperations ecoreOperation="DesignPatterns.ecore#//MediatedObserverPattern/Compose">
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatedObserverPattern/Compose/ObserverPattern"/>
+        <genParameters ecoreParameter="DesignPatterns.ecore#//MediatedObserverPattern/Compose/MediatorPattern"/>
+      </genOperations>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/uml2/3.0.0/UML platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore" xmi:id="_PS9awINUEeC2kfn0NAkaTg" name="Composite">
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_PS9awYNUEeC2kfn0NAkaTg" name="Integer"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_PS9awoNUEeC2kfn0NAkaTg" name="String"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_PS9aw4NUEeC2kfn0NAkaTg" name="Boolean"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_PS9axINUEeC2kfn0NAkaTg" name="Component" isAbstract="true">
+    <ownedOperation xmi:id="_PS9axYNUEeC2kfn0NAkaTg" name="Add" isAbstract="true">
+      <ownedParameter xmi:id="_PS9axoNUEeC2kfn0NAkaTg" name="component" type="_PS9axINUEeC2kfn0NAkaTg"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_PS9ax4NUEeC2kfn0NAkaTg" name="Remove" isAbstract="true">
+      <ownedParameter xmi:id="_PS9ayINUEeC2kfn0NAkaTg" name="component" type="_PS9axINUEeC2kfn0NAkaTg"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_PS9ayYNUEeC2kfn0NAkaTg" name="GetChild" isAbstract="true">
+      <ownedParameter xmi:id="_PS9ayoNUEeC2kfn0NAkaTg" type="_PS9axINUEeC2kfn0NAkaTg" direction="return"/>
+      <ownedParameter xmi:id="_PS9ay4NUEeC2kfn0NAkaTg" name="index" type="_PS9awYNUEeC2kfn0NAkaTg"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_PS9azINUEeC2kfn0NAkaTg" name="MyComposite">
+    <generalization xmi:id="_PS9azYNUEeC2kfn0NAkaTg" general="_PS9axINUEeC2kfn0NAkaTg"/>
+    <ownedAttribute xmi:id="_PS9azoNUEeC2kfn0NAkaTg" name="children" type="_PS9axINUEeC2kfn0NAkaTg" aggregation="composite" association="_PS9a2INUEeC2kfn0NAkaTg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_PS9az4NUEeC2kfn0NAkaTg" value="-1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_PS9a0INUEeC2kfn0NAkaTg"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_PS9a0YNUEeC2kfn0NAkaTg" name="Add">
+      <ownedParameter xmi:id="_PS9a0oNUEeC2kfn0NAkaTg" name="component" type="_PS9axINUEeC2kfn0NAkaTg"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_PS9a04NUEeC2kfn0NAkaTg" name="Remove">
+      <ownedParameter xmi:id="_PS9a1INUEeC2kfn0NAkaTg" name="component" type="_PS9axINUEeC2kfn0NAkaTg"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_PS9a1YNUEeC2kfn0NAkaTg" name="GetChild">
+      <ownedParameter xmi:id="_PS9a1oNUEeC2kfn0NAkaTg" type="_PS9axINUEeC2kfn0NAkaTg" direction="return"/>
+      <ownedParameter xmi:id="_PS9a14NUEeC2kfn0NAkaTg" name="index" type="_PS9awYNUEeC2kfn0NAkaTg"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_PS9a2INUEeC2kfn0NAkaTg" memberEnd="_PS9a2YNUEeC2kfn0NAkaTg _PS9azoNUEeC2kfn0NAkaTg">
+    <ownedEnd xmi:id="_PS9a2YNUEeC2kfn0NAkaTg" name="" type="_PS9azINUEeC2kfn0NAkaTg" association="_PS9a2INUEeC2kfn0NAkaTg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_PS9a2oNUEeC2kfn0NAkaTg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_PS9a24NUEeC2kfn0NAkaTg" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Model>

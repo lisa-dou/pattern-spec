@@ -1,0 +1,103 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "MediatorPatternStruct.kmt" 
+
+
+using kermeta::standard
+using kermeta::persistence 
+using uml
+ 
+aspect class MediatorPattern inherits DesignPattern
+{
+	method CreateInitStruct():Void is
+    do
+        super()
+        // Abstract Mediator
+        self.Mediator:=createClass(self.umlModel,"Mediator",true) 
+        
+        // Abstract Colleague
+        self.Colleague:=createClass(self.umlModel,"Colleague",true)
+        
+        // Mail Box          
+        self.Message:=createClass(self.umlModel,"Message",false)
+        self.MailBox:=createClass(self.umlModel,"MailBox",false)
+        
+         
+        self.Connect:=createOperation(self.Mediator,"Connect",false)
+        self.ConPara1:=createParameter(self.Connect,"coll", self.Colleague)
+        self.ConPara2:=createParameter(self.Connect,"mb", self.MailBox)
+        
+        self.Disconnect:=createOperation(self.Mediator,"Disconnect",false)
+        self.DisconPara1:=createParameter(self.Disconnect,"coll", self.Colleague)
+        self.DisconPara2:=createParameter(self.Disconnect,"mb", self.MailBox)
+        
+        self.PutMs:=createOperation(self.Mediator,"PutMS",false)
+        self.PutPara1:=createParameter(self.PutMs,"from", self.Colleague)
+        self.PutPara2:=createParameter(self.PutMs,"to", self.Colleague)
+        self.setParameterMulit(self.PutPara2,0,-1)
+        self.PutPara3:=createParameter(self.PutMs,"mb", self.MailBox)
+        self.PutPara4:=createParameter(self.PutMs,"ms", self.Message)
+        
+        self.GetMs:=createOperation(self.Mediator,"GetMS",false)
+        self.GetPara1:=createParameter(self.GetMs,"coll", self.Colleague)
+        self.GetPara2:=createParameter(self.GetMs,"mb", self.MailBox)
+        setRetType(self.GetMs, self.Message)
+        
+        self.Connected:=createOperation(self.Mediator,"Connected",false)
+        setRetType(self.Connected, self.BoolPrimType)      
+        self.ContdPara1:=createParameter(self.Connected,"col", self.Colleague)
+        self.ContdPara2:=createParameter(self.Connected,"med", self.Mediator)
+        
+        self.Sender:=createOperation(self.Mediator,"Sender",false)
+        setRetType(self.Sender, self.BoolPrimType)
+        self.SndPara1:=createParameter(self.Sender,"col", self.Colleague)
+        self.SndPara2:=createParameter(self.Sender,"mb", self.MailBox)
+        
+        self.Receiver:=createOperation(self.Mediator,"Receiver",false)
+        setRetType(self.Receiver, self.BoolPrimType)
+        self.RecPara1:=createParameter(self.Receiver,"col", self.Colleague)
+        self.RecPara2:=createParameter(self.Receiver,"mb", self.MailBox) 
+     
+        // Associations       
+        self.MbAssoSnd:=createAssociation(umlModel,
+          self.MailBox,"",1,1,false,AggregationKind.none,
+          self.Colleague,"senders",0,-1,true,AggregationKind.none)
+          
+        self.MbAssoRec:=createAssociation(umlModel,
+          self.MailBox,"",1,1,false,AggregationKind.none,
+          self.Colleague,"receivers",0,-1,true,AggregationKind.none)  
+        
+        self.AbsColAssoAbsMed:=createAssociation(umlModel,
+          self.Colleague,"",1,1,false,AggregationKind.none,
+          self.Mediator,"mediator",1,1,true,AggregationKind.none)  
+        
+        self.AbsMedMboxAsso:=createAssociation(self.umlModel,
+          self.Mediator,"",1,1,false,AggregationKind.none,
+          self.MailBox,"mboxes",0,-1,true,AggregationKind.none)
+        
+        self.AbsMedColAsso:=createAssociation(umlModel,
+          self.Mediator,"",1,1,false,AggregationKind.none,
+          self.Colleague,"colleagues",0,-1,true,AggregationKind.none)  
+          
+        self.MbAssoMess:=createAssociation(umlModel,
+          self.MailBox,"",1,1,false,AggregationKind.none,
+          self.Message,"message",1,1,true,AggregationKind.none)           
+    end    
+
+	
+
+}
+
+
+

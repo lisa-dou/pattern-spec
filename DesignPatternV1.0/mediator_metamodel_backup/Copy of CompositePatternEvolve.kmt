@@ -1,0 +1,89 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "CompositePatternStruct.kmt" 
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class CompositePattern inherits DesignPattern 
+{    	   
+    // Evolution Rule 1: Add The Operation by name
+    operation AddATheOp(opName:String,ret:Type,pasN:String[0..*],pasType:Type[0..*]):Void  
+    pre AddATheOpPre is
+    do
+      NotNull(opName) and
+      ret!=void and
+      pasType.forAll{pt|pt!= void } and
+      pasN.forAll{n|NotNull(n)} and
+      self.TheOps.forAll{top|top!=opName} and
+      self.ComTheOps.forAll{cop|cop!=opName} and
+      self.LeafTheOps.forAll{lop|lop!=opName}       
+    end
+    is
+    do
+      // Add an operation to the TheOps set
+      var theop:uml::Operation init uml::Operation.new
+      theop.name:=opName
+      setRetType(theop,ret)
+      theop.isAbstract:=true
+      pasN.each{pn|
+      pasType.each{pt| 
+        if(pasN.indexOf(pn)==pasType.indexOf(pt))
+        then
+	        var para:uml::Parameter init uml::Parameter.new
+	        para.name:=pn
+	        para.type:=pt
+	        theop.ownedParameter.add(para)
+	    end }}
+	  self.TheOps.add(theop)
+	  self.Component.ownedOperation.add(theop)
+      // Add an operation to the ComTheOps
+      var thecomop:uml::Operation init uml::Operation.new
+      thecomop.name:=opName
+      setRetType(thecomop,ret)
+      pasN.each{pn|
+      pasType.each{pt| 
+        if(pasN.indexOf(pn)==pasType.indexOf(pt))
+        then
+	        var para:uml::Parameter init uml::Parameter.new
+	        para.name:=pn
+	        para.type:=pt
+	        thecomop.ownedParameter.add(para)
+	    end}}  
+      self.ComTheOps.add(thecomop) 
+      self.Composites.each{cps|cps.ownedOperation.add(thecomop)  }
+      // Add an operatio to the LeafTheOps
+      var thelop:uml::Operation init uml::Operation.new
+      thelop.name:=opName
+      setRetType(thelop,ret)
+      pasN.each{pn|
+      pasType.each{pt| 
+        if(pasN.indexOf(pn)==pasType.indexOf(pt))
+        then
+	        var para:uml::Parameter init uml::Parameter.new
+	        para.name:=pn
+	        para.type:=pt
+	        thelop.ownedParameter.add(para)
+	    end}}  
+      self.LeafTheOps.add(thelop)    
+      self.Leaves.each{ls|ls.ownedOperation.add(thelop) }
+    end  
+    
+    // Evolution Rule 2:
+       
+}
+
+

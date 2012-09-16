@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_0qWi0HArEeCyAOV6cfNyPA" name="ObserverPatternd5">
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_0qWi0XArEeCyAOV6cfNyPA" name="Integer"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_0qWi0nArEeCyAOV6cfNyPA" name="String"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_0qWi03ArEeCyAOV6cfNyPA" name="Boolean"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_0qWi1HArEeCyAOV6cfNyPA" name="Observer" isAbstract="true">
+    <ownedOperation xmi:id="_0qWi1XArEeCyAOV6cfNyPA" name="Update" isAbstract="true"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_0qWi1nArEeCyAOV6cfNyPA" name="Subject" isAbstract="true">
+    <ownedAttribute xmi:id="_0qWi13ArEeCyAOV6cfNyPA" name="observers" type="_0qWi1HArEeCyAOV6cfNyPA" association="_0qWi33ArEeCyAOV6cfNyPA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_0qWi2HArEeCyAOV6cfNyPA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_0qWi2XArEeCyAOV6cfNyPA"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_0qWi2nArEeCyAOV6cfNyPA" name="Attach">
+      <ownedParameter xmi:id="_0qWi23ArEeCyAOV6cfNyPA" name="obs" type="_0qWi1HArEeCyAOV6cfNyPA"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_0qWi3HArEeCyAOV6cfNyPA" name="Detach">
+      <ownedParameter xmi:id="_0qWi3XArEeCyAOV6cfNyPA" name="obs" type="_0qWi1HArEeCyAOV6cfNyPA"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_0qWi3nArEeCyAOV6cfNyPA" name="Notify"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_0qWi33ArEeCyAOV6cfNyPA" memberEnd="_0qWi4HArEeCyAOV6cfNyPA _0qWi13ArEeCyAOV6cfNyPA">
+    <ownedEnd xmi:id="_0qWi4HArEeCyAOV6cfNyPA" name="" type="_0qWi1nArEeCyAOV6cfNyPA" association="_0qWi33ArEeCyAOV6cfNyPA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_0qWi4XArEeCyAOV6cfNyPA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_0qWi4nArEeCyAOV6cfNyPA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_0qWi43ArEeCyAOV6cfNyPA" name="MyConSub1">
+    <generalization xmi:id="_0qWi5HArEeCyAOV6cfNyPA" general="_0qWi1nArEeCyAOV6cfNyPA"/>
+    <ownedAttribute xmi:id="_0qWi5XArEeCyAOV6cfNyPA" name="conSubState" type="_0qWi0XArEeCyAOV6cfNyPA"/>
+    <ownedOperation xmi:id="_0qWi5nArEeCyAOV6cfNyPA" name="GetState">
+      <ownedParameter xmi:id="_0qWi53ArEeCyAOV6cfNyPA" type="_0qWi0XArEeCyAOV6cfNyPA" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_0qWi6HArEeCyAOV6cfNyPA" name="SetState">
+      <ownedParameter xmi:id="_0qWi6XArEeCyAOV6cfNyPA" name="value" type="_0qWi0XArEeCyAOV6cfNyPA"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_0qWi6nArEeCyAOV6cfNyPA" name="MyConSub2">
+    <generalization xmi:id="_0qWi63ArEeCyAOV6cfNyPA" general="_0qWi1nArEeCyAOV6cfNyPA"/>
+    <ownedAttribute xmi:id="_0qWi7HArEeCyAOV6cfNyPA" name="conSubState" type="_0qWi0nArEeCyAOV6cfNyPA"/>
+    <ownedOperation xmi:id="_0qWi7XArEeCyAOV6cfNyPA" name="GetState">
+      <ownedParameter xmi:id="_0qWi7nArEeCyAOV6cfNyPA" type="_0qWi0nArEeCyAOV6cfNyPA" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_0qWi73ArEeCyAOV6cfNyPA" name="SetState">
+      <ownedParameter xmi:id="_0qWi8HArEeCyAOV6cfNyPA" name="value" type="_0qWi0nArEeCyAOV6cfNyPA"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_0qWi8XArEeCyAOV6cfNyPA" name="MyConObs1">
+    <generalization xmi:id="_0qWi8nArEeCyAOV6cfNyPA" general="_0qWi1HArEeCyAOV6cfNyPA"/>
+    <ownedAttribute xmi:id="_0qWi83ArEeCyAOV6cfNyPA" name="conObsState" type="_0qWi0XArEeCyAOV6cfNyPA"/>
+    <ownedAttribute xmi:id="_0qWi9HArEeCyAOV6cfNyPA" name="subject" type="_0qWi43ArEeCyAOV6cfNyPA" association="_0qWi-HArEeCyAOV6cfNyPA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_0qWi9XArEeCyAOV6cfNyPA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_0qWi9nArEeCyAOV6cfNyPA" value="1"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_0qWi93ArEeCyAOV6cfNyPA" name="Update"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_0qWi-HArEeCyAOV6cfNyPA" memberEnd="_0qWi-XArEeCyAOV6cfNyPA _0qWi9HArEeCyAOV6cfNyPA">
+    <ownedEnd xmi:id="_0qWi-XArEeCyAOV6cfNyPA" name="" type="_0qWi8XArEeCyAOV6cfNyPA" association="_0qWi-HArEeCyAOV6cfNyPA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_0qWi-nArEeCyAOV6cfNyPA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_0qWi-3ArEeCyAOV6cfNyPA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_0qWi_HArEeCyAOV6cfNyPA" name="WrongConObs">
+    <generalization xmi:id="_0qWi_XArEeCyAOV6cfNyPA" general="_0qWi1HArEeCyAOV6cfNyPA"/>
+  </packagedElement>
+</uml:Model>

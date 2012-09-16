@@ -1,0 +1,41 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "FactoryMethodPatternStruct.kmt" 
+ 
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class FactoryMethodPattern inherits DesignPattern
+{   
+    method CreateInitStruct():Void is
+    do
+        super()
+        //1  Creator
+        self.Creator:=createClass(umlModel,"Creator",true)                    
+        //2  ConCrts      
+        //3  Product
+        self.Product:=createClass(umlModel,"Product",true)
+        //4  ConPdts
+        //5  FactoryMethod
+        self.FactoryMethod:=createOperation(self.Creator,"FactoryMethod",true)
+        self.setRetType(self.FactoryMethod,self.Product)     
+        //6  ConFatMtd
+        //7  ConCrtsAssConPdts
+    end    
+}
+
+

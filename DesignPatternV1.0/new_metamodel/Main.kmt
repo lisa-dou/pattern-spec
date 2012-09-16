@@ -1,0 +1,154 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+@mainClass "designPatterns::Main" 
+@mainOperation "main"
+
+
+package designPatterns;
+
+require "kermeta"
+require "Waving.kmt"
+
+using kermeta::standard
+
+class Main
+{ 
+	operation main() : Void is do 
+	
+	    // Demo1: 观察者模式实例化函数的执行
+	    /* 
+		var AnOP:ObserverPattern init ObserverPattern.new
+		AnOP.CreateInitStruct() 	
+		AnOP.checkInvariants	
+		AnOP.save("ObserverPatternd1")
+		*/
+		// Demo2: 任意改变单个参与者的名称
+		/*
+		var AnOP:ObserverPattern init ObserverPattern.new
+		AnOP.CreateInitStruct() 	
+		AnOP.Subject.name:="MySubject"
+		AnOP.Attach.name:="MyAttach"
+		AnOP.checkInvariants	
+		AnOP.save("ObserverPatternd2")
+		*/
+		// Demo3: 基于模式的初始结构添加一个新的具体主题和一个新的具体观察者
+		/*
+		var AnOP:ObserverPattern init ObserverPattern.new
+		AnOP.CreateInitStruct() 			
+		var newsub:uml::Class init uml::Class.new
+		newsub:=
+		AnOP.AddConcreteSubjectE("MyConSub1",void,AnOP.IntPrimType,void,void)		
+		AnOP.AddConcreteObserverE("MyConObs1",void,AnOP.IntPrimType,void,newsub)	
+		AnOP.AddConcreteObserverE("MyConObs2",void,AnOP.IntPrimType,void,newsub)	
+		AnOP.CreatePatternSpecification()
+		AnOP.checkInvariants	 
+		AnOP.save("ObserverPatternd3")
+		*/
+		// Demo4：添加两个具体主题和一个具体观察者
+		/* 
+		var AnOP:ObserverPattern init ObserverPattern.new
+		AnOP.CreateInitStruct() 			
+		var newsub:uml::Class init uml::Class.new
+		newsub:=
+		AnOP.AddConcreteSubjectE("MyConSub1",void,AnOP.IntPrimType,void,void)
+		AnOP.AddConcreteSubjectE("MyConSub2",void,AnOP.StringPrimType,void,void)		
+		AnOP.AddConcreteObserverE("MyConObs1",void,AnOP.IntPrimType,void,newsub)	
+	    AnOP.AddConcreteObserverE("MyConObs2",void,AnOP.IntPrimType,void,newsub)	
+		AnOP.save("ObserverPatternd4")
+		AnOP.checkInvariants	
+		*/
+		// Demo5：添加两个具体主题和两个具体观察者，但其中一个具体观察者不监听任何具体主题
+		/*
+		var AnOP:ObserverPattern init ObserverPattern.new
+		AnOP.CreateInitStruct() 			
+		var newsub:uml::Class init uml::Class.new
+		newsub:=
+		AnOP.AddConcreteSubjectE("MyConSub1",void,AnOP.IntPrimType,void,void)
+		AnOP.AddConcreteSubjectE("MyConSub2",void,AnOP.StringPrimType,void,void)		
+		AnOP.AddConcreteObserverE("MyConObs1",void,AnOP.IntPrimType,void,newsub)		  
+	    var anewobs:uml::Class init uml::Class.new
+	    anewobs.name:="WrongConObs"
+	    AnOP.umlModel.packagedElement.add(anewobs)	
+	    AnOP.ConObss.add(anewobs)	  		
+	    AnOP.createGeneralization(anewobs,AnOP.Observer)	    					
+		AnOP.save("ObserverPatternd5")
+		AnOP.checkInvariants
+	    */
+		//Demo6:行为织入
+		/*
+		var AnOP:ObserverPattern init ObserverPattern.new
+		AnOP.CreateInitStruct() 
+		AnOP.InstBehSinPart()		
+		var newsub:uml::Class init uml::Class.new
+		newsub:=
+		AnOP.AddConcreteSubjectE("MyConSub1",void,AnOP.IntPrimType,void,void)
+		AnOP.AddConcreteSubjectE("MyConSub2",void,AnOP.StringPrimType,void,void)		
+		AnOP.AddConcreteObserverE("MyConObs1",void,AnOP.IntPrimType,void,newsub)	
+	    AnOP.AddConcreteObserverE("MyConObs2",void,AnOP.IntPrimType,void,newsub)	
+		AnOP.InstBehSetPart()
+		AnOP.save("ObserverPatternd4")
+		AnOP.checkInvariants	
+		*/
+		// Demo7:工厂方法模式
+		/*
+		var AFMPat:FactoryMethodPattern init FactoryMethodPattern.new
+		AFMPat.CreateInitStruct()
+		var newpdt1:uml::Class init uml::Class.new
+		newpdt1:=AFMPat.AddConProductE("MyProd1")
+		var newpdt2:uml::Class init uml::Class.new
+		newpdt2:=AFMPat.AddConProductE("MyProd2")
+		AFMPat.AddConCreatorE("MyCreator1",void,newpdt1) 		
+		AFMPat.AddConCreatorE("MyCreator2",void,newpdt2)	
+		AFMPat.CreatePatternSpecification()	
+		AFMPat.checkInvariants
+		AFMPat.save("FactoryMethod") 
+		*/
+		// Demo8:组合模式
+		/*
+		var AComPat:CompositePattern init CompositePattern.new
+		AComPat.CreateInitStruct()
+		AComPat.AddCompositeE("MyComposite1","children1") 
+		AComPat.AddCompositeE("MyComposite2","children2") 
+		AComPat.AddALeafE("MyLeaf1")
+		AComPat.AddALeafE("MyLeaf2")
+		AComPat.CreatePatternSpecification()
+		AComPat.checkInvariants
+		AComPat.save("Composite1")
+		*/
+		// Demo9:调停者模式
+		
+		var AMedPat:MediatorPattern init MediatorPattern.new
+		AMedPat.CreateInitStruct()
+		AMedPat.AddConcreteColleagueE("ConColleague1")
+		AMedPat.AddConcreteColleagueE("ConColleague2")
+		AMedPat.AddConcreteMediatorE("ConMediator1")
+		AMedPat.AddConcreteMediatorE("ConMediator2")
+		AMedPat.CreatePatternSpecification()
+		AMedPat.checkInvariants
+		AMedPat.save("Mediator1") 
+		
+ 
+
+
+        /*
+		mymodel.compositep:=CompositePattern.new
+		mymodel.compositep.CreateInitStruct()
+		var parN:String[0..*] init OrderedSet<String>.new
+		parN.add("na1")
+		parN.add("na2")
+		var parT:uml::Type[0..*] init OrderedSet<uml::Type>.new
+		parT.add(mymodel.compositep.IntPrimType)
+		parT.add(mymodel.compositep.BoolPrimType)
+		mymodel.compositep.AddATheOp("Operation", mymodel.compositep.IntPrimType,parN,parT)
+		mymodel.compositep.checkInvariants
+		mymodel.compositep.save("Composite") 
+		*/ 	
+		
+		
+	end  
+}

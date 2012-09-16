@@ -1,0 +1,362 @@
+/* $Id:$ 
+ * Creation : April 27, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+
+package designPatterns;
+
+
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt" 
+require "ObserverPatternStruct.kmt"
+
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class ObserverPattern inherits DesignPattern
+{	 	   	        
+	
+	method CreatePatternSpecification() : Void is 
+    do
+	   // Helpers
+	   var AttachedN:String
+	   AttachedN:= self.Attached.name	
+	   var AttachedPara:String
+	   AttachedPara:= self.AttachedPara.name	   
+	   var AtcParaN:String
+	   AtcParaN:= self.AttachPara.name
+	   var DtcParaN:String
+	   DtcParaN:= self.DetachPara.name
+	   var ObserverN:String
+	   ObserverN:= self.Observer.name
+	   var obssEnd:uml::Property init uml::Property.new
+       obssEnd:=self.getAssoEndWithType(self.SubAsObs, self.Observer)
+       var UpdateN:String
+       UpdateN:=self.Update.name
+       
+	   // Implementations of Dynamic Relations
+	   // Attached Relation's Imp
+	   var attachedImpSymbol:String
+	   attachedImpSymbol:=
+	     "{ return this."+obssEnd.name+".contains("+AttachedPara+");}"
+	   self.CreateSpec(self.Attached, "Body", attachedImpSymbol)
+	   	  	   
+	   // Updated Relation's Imp
+	   self.ConUpdated.each{conUpted|
+         // Helpers        
+         
+         var owningclass:uml::Class init uml::Class.new
+         owningclass:=GetClass(conUpted, self.ConObss)
+         //stdio.writeln("The class is "+owningclass.name)
+                 
+         var lisToPro:uml::Property init uml::Property.new                          
+         lisToPro:= GetListeningTo(owningclass)
+         //stdio.writeln("The class is "+lisToPro.type.name)
+         
+         var cls:Class init Class.new
+         cls:=(lisToPro.type).asType(Class)
+         //stdio.writeln("The class is "+cls.name)
+         
+         var subPro:uml::Property init uml::Property.new         
+         subPro:= GetState(cls, self.ConSubSts)
+         //stdio.writeln("The class is "+cls.name)
+         
+         var obsPro:uml::Property init uml::Property.new
+         obsPro:= GetState(owningclass, self.ConObsSts)     
+                    
+         //  Updated Body
+         var updatedImpSymbol:String 
+         updatedImpSymbol:=
+           "{ return this."+lisToPro.name+"."+subPro.name+"=="+"this."+obsPro.name+";}"
+         self.CreateSpec(conUpted, "Body", updatedImpSymbol)  
+         }	   	 
+	   
+	   // Pattern-Related Operations' Specification and Implementation
+	   // Attach Pre
+	   var attachPreSymbol:String 	   
+       attachPreSymbol:="//@ requires !" + AttachedN +"("+ AtcParaN +");"
+       self.CreateSpec(self.Attach, "Pre", attachPreSymbol)       
+       // Attach Post
+       var attachPostSymbol:String 
+       attachPostSymbol:="//@ ensures "+ AttachedN +"("+ AtcParaN +");"
+       self.CreateSpec(self.Attach, "Post", attachPostSymbol)
+	   // Attach Imp
+	   var attachImpSymbol:String
+	   attachImpSymbol:= "{ this."+ obssEnd.name + ".add("+ AtcParaN + ");}"
+       self.CreateSpec(self.Attach, "Body", attachImpSymbol)
+	   
+	   // Detach Pre
+	   var detachPreSymbol:String 
+       detachPreSymbol:="//@ requires "+ AttachedN +"("+ AtcParaN +");"
+       self.CreateSpec(self.Detach, "Pre", detachPreSymbol)  
+       // Detach Post
+	   var detachPostSymbol:String 
+       detachPostSymbol:="//@ ensures !"+ AttachedN +"("+ AtcParaN +");"
+       self.CreateSpec(self.Detach, "Post", detachPostSymbol)  
+       // Detach Imp
+	   var detachImpSymbol:String 
+       detachImpSymbol:="{ this."+ obssEnd.name + ".remove("+ AtcParaN + ");}"
+       self.CreateSpec(self.Detach, "Body", detachImpSymbol)  
+       
+     
+       
+       // Notify Pre:Empty
+       // Notify Post     
+       var notifyPostSymbol:String 
+       notifyPostSymbol:="//@ ensures "+ 
+         "(\\forall "+ObserverN +" obs;"+ AttachedN+"(obs)==>"+"obs.Updated());"
+       self.CreateSpec(self.Notify, "Post", notifyPostSymbol)  
+      
+       // Notify Body
+       
+       var notifyImpSymbol:String 
+       notifyImpSymbol:=
+       "{ for(Iterator<"+ ObserverN+"> itobs=this."+obssEnd.name+".iterator();"+
+            "itobs.hasNext();)"+"\n"  +
+       "{ "+ObserverN+" tempobs="+"itobs.next();"+"\n"+
+       "tempobs."+UpdateN+"(); } }" 
+       self.CreateSpec(self.Notify, "Body", notifyImpSymbol)  
+       
+       /*
+       method CreatePatternSpecification() : Void is 
+    do
+	   // Helpers
+	   var AttachedN:String
+	   AttachedN:= self.Attached.name	
+	   var AttachedP1N:String
+	   AttachedP1N:= self.AttachedPara1.name
+	   var AttachedP2N:String
+	   AttachedP2N:= self.AttachedPara2.name   
+	   var AtcParaN:String
+	   AtcParaN:= self.AttachPara.name
+	   var DtcParaN:String
+	   DtcParaN:= self.DetachPara.name
+	   var ObserverN:String
+	   ObserverN:= self.Observer.name
+	   var obssEnd:uml::Property init uml::Property.new
+       obssEnd:=self.getAssoEndWithType(self.SubAsObs, self.Observer)
+       var UpdateN:String
+       UpdateN:=self.Update.name
+       
+	   // Implementations of Dynamic Relations
+	   // Attached Relation's Imp
+	   var attachedImpSymbol:String
+	   attachedImpSymbol:=
+	     "{ return "+AttachedP1N+"."+obssEnd.name+".contains("+AttachedP2N+");}"
+	   self.CreateSpec(self.Attached, "Body", attachedImpSymbol)
+	   
+	   
+	   
+	   // Updated Relation's Imp
+	   self.ConUpdated.each{conUpted|
+         // Helpers
+         var updtedpara1N:String
+         updtedpara1N:=GetPara(conUpted, self.ConUpdatedParas1).name
+         
+         var updtedpara2N:String
+         updtedpara2N:=GetPara(conUpted, self.ConUpdatedParas2).name 
+         
+         var owningclass:uml::Class init uml::Class.new
+         owningclass:=GetClass(conUpted, self.ConObss)
+         //stdio.writeln("The class is "+owningclass.name)
+                 
+         var lisToPro:uml::Property init uml::Property.new                          
+         lisToPro:= GetListeningTo(owningclass)
+         //stdio.writeln("The class is "+lisToPro.type.name)
+         
+         var cls:Class init Class.new
+         cls:=(lisToPro.type).asType(Class)
+         //stdio.writeln("The class is "+cls.name)
+         
+         var subPro:uml::Property init uml::Property.new         
+         subPro:= GetState(cls, self.ConSubSts)
+         //stdio.writeln("The class is "+cls.name)
+         
+         var obsPro:uml::Property init uml::Property.new
+         obsPro:= GetState(owningclass, self.ConObsSts)     
+                    
+         //  Updated Body
+         var updatedImpSymbol:String 
+         updatedImpSymbol:=
+           "{ return "+updtedpara1N+"."+subPro.name+"=="+updtedpara2N+"."+obsPro.name+";}"
+         self.CreateSpec(conUpted, "Body", updatedImpSymbol)  
+         }	   	 
+	   
+	   // Pattern-Related Operations' Specification and Implementation
+	   // Attach Pre
+	   var attachPreSymbol:String 	   
+       attachPreSymbol:="//@ requires !"+ AttachedN +"(this,"+ AtcParaN +");"
+       self.CreateSpec(self.Attach, "Pre", attachPreSymbol)       
+       // Attach Post
+       var attachPostSymbol:String 
+       attachPostSymbol:="//@ ensures "+ AttachedN +"(this,"+ AtcParaN +");"
+       self.CreateSpec(self.Attach, "Post", attachPostSymbol)
+	   // Attach Imp
+	   var attachImpSymbol:String
+	   attachImpSymbol:= "{ this."+ obssEnd.name + ".add("+ AtcParaN + ");}"
+       self.CreateSpec(self.Attach, "Body", attachImpSymbol)
+	   
+	   // Detach Pre
+	   var detachPreSymbol:String 
+       detachPreSymbol:="//@ requires "+ AttachedN +"(this,"+ AtcParaN +");"
+       self.CreateSpec(self.Detach, "Pre", detachPreSymbol)  
+       // Detach Post
+	   var detachPostSymbol:String 
+       detachPostSymbol:="//@ ensures !"+ AttachedN +"(this,"+ AtcParaN +");"
+       self.CreateSpec(self.Detach, "Post", detachPostSymbol)  
+       // Detach Imp
+	   var detachImpSymbol:String 
+       detachImpSymbol:="{ this."+ obssEnd.name + ".remove("+ AtcParaN + ");}"
+       self.CreateSpec(self.Detach, "Body", detachImpSymbol)  
+       
+       
+       
+       
+       
+       // Notify Pre:Empty
+       // Notify Post
+       // The Names of the Dynamic Relations shoud be constants
+       /*
+       var notifyPostSymbol:String 
+       notifyPostSymbol:="//@ ensures !"+ 
+         "(\\forall "+ObserverN +" obs,"+ AttachedN+"(this,obs)==>"+"obs.Updated(this,obs));"
+       self.CreateSpec(self.Notify, "Post", notifyPostSymbol)  
+       */
+       // Notify Body
+       /*
+       var notifyImpSymbol:String 
+       notifyImpSymbol:=
+       "{ for(Iterator<"+ ObserverN+"> itobs=this."+obssEnd.name+".iterator();"+
+            "itobs.hasNext();)"+"\n"  +
+       "{ "+ObserverN+" tempobs="+"itobs.next();"+"\n"+
+       "tempobs."+UpdateN+"(); } }" 
+       self.CreateSpec(self.Notify, "Body", notifyImpSymbol)  
+       
+       // For each Update Operation of every Concrete Observer       
+       self.ConObsUpdOps.each{conUpd|
+         var owningclass:uml::Class init uml::Class.new
+         owningclass:=GetClass(conUpd, self.ConObss)
+         
+         var lisToPro:uml::Property init uml::Property.new
+         lisToPro:= GetListeningTo(owningclass)                
+         
+         var cls:Class init Class.new
+         cls:=(lisToPro.type).asType(Class)
+         //stdio.writeln("The class is "+cls.name)
+         
+         var subPro:uml::Property init uml::Property.new
+         subPro:= GetState(cls, self.ConSubSts)
+         
+         var obsPro:uml::Property init uml::Property.new
+         obsPro:= GetState(owningclass, self.ConObsSts)        
+         //  Update Pre
+         var updatePreSymbol:String 
+         updatePreSymbol:=
+           "//@ requires this."+ lisToPro.name+"."+ AttachedN +"(this."+ lisToPro.name +",this);"
+         self.CreateSpec(conUpd, "Pre", updatePreSymbol)  
+         //  Update Post
+         var updatePostSymbol:String 
+         updatePostSymbol:=
+           "//@ ensures Updated(this."+lisToPro.name+",this);"
+         self.CreateSpec(conUpd, "Post", updatePostSymbol)  
+         //  Update Body
+         var updateImpSymbol:String 
+         updateImpSymbol:=
+           "{ "+"this."+ obsPro.name +"=this."+lisToPro.name+"."+subPro.name+";}"
+         self.CreateSpec(conUpd, "Body", updateImpSymbol)  
+         }	   	   
+	end
+	
+	/*
+	
+		// a3. Update Methods for each ConObserver
+		Iterator<Operation> itUpdates = this.getConcreteObserversUpdateOps().iterator();
+		while (itUpdates.hasNext())
+		{
+			Operation conUpdate = itUpdates.next();
+			// Get the Concrete Observer's (The owner of this Update Operation) Listening Property
+			Property p = this.GetListeningTo(conUpdate.getClass_());
+			
+			Constraint conUpdate_pre=conUpdate.createPrecondition("Update_Pre");
+			Expression conUpdatePreExp=conUpdate_pre.createNameExpression("JML", null);
+			conUpdatePreExp.setSymbol("//@ requires "
+				+ Attached + "(this." + p.getName() + "," + "this" + ") == true; ");
+						
+			Constraint conUpdate_post=conUpdate.createPostcondition("Update_Post");
+			Expression conUpdatePostExp=conUpdate_post.createNameExpression("JML", null);
+			conUpdatePostExp.setSymbol("//@ ensures "  
+				+ Updated + "(this." + p.getName() + "," + "this" + ") == true; ");
+		}
+		
+		// a4. Notify Method
+		Constraint Notify_post=this.getNotify().createPostcondition("Notify_Post");
+		Expression NotifyPostExp=Notify_post.createNameExpression("JML", null);
+		NotifyPostExp.setSymbol("//@ ensures " 
+				+ "( \\forall "+ this.getObserver().getName() + " "+"obs; "
+				+ Attached +"(this,obs) ==> " + Updated  + "(this,obs) ); ");
+		
+		// 
+	
+	
+	 
+	reference Attached : Operation[1..1]
+    reference AttachedPara1 : Parameter[1..1]
+    reference AttachedPara2 : Parameter[1..1]
+    reference Updated : Operation[0..*]
+    reference UpdatedParas1: Parameter[0..*]
+    reference UpdatedParas2: Parameter[0..*]
+
+    inv beh_spec is do
+	  HasOperation(self.Subject, self.Attached) and	   
+	  HasParameter(self.Attached, self.AttachedPara1) and
+	  HasParameter(self.Attached, self.AttachedPara2) and
+	  HasTypePa(self.AttachedPara1, self.Subject) and
+	  HasTypePa(self.AttachedPara2, self.Observer) and
+	  ReturnType(self.Attached, self.BoolPrimType) and
+	  
+	  HasOpOnetoOne(self.ConObss, self.Updated) and
+	  HasParaOnetoOne(self.Updated, self.UpdatedParas1) and
+	  HasParaOnetoOne(self.Updated, self.UpdatedParas2) and
+	  HasTypePas(self.UpdatedParas1, self.Subject) and
+	  HasTypePas(self.UpdatedParas1, self.Observer) and
+	  ReturnTypes(self.Updated, self.BoolPrimType) end 	 
+	
+	
+	operation InstBehSinPart():Void is
+	do
+	   self.Attached:=createOperation(self.Subject,"Attached",false)
+	   self.AttachedPara1:=createParameter(self.Attached,"sub", self.Subject)
+	   self.AttachedPara2:=createParameter(self.Attached,"obs", self.Subject)
+	   setRetType(Attached,self.BoolPrimType)	   
+	end
+	
+	operation InstBehSetPart():Void is
+	do
+	  self.ConObss.each{conobs|
+	  var newupdated:Operation init Operation.new
+	  newupdated.name:="Updated"
+	  self.Updated.add(newupdated)
+	  conobs.ownedOperation.add(newupdated)
+	  var par1:Parameter init Parameter.new
+	  var par2:Parameter init Parameter.new  
+	  par1.name:="sub"
+	  par2.name:="obs"
+	  par1.type:=self.Subject
+	  par2.type:=self.Observer
+	  self.UpdatedParas1.add(par1)
+	  self.UpdatedParas2.add(par2)
+	  newupdated.ownedParameter.add(par1)
+	  newupdated.ownedParameter.add(par2)
+	  setRetType(newupdated,self.BoolPrimType)
+	  } 
+	end   
+	*/
+	 end 
+}

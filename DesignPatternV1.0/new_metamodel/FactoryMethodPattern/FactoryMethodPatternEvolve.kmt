@@ -1,0 +1,115 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "FactoryMethodPatternStruct.kmt" 
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class FactoryMethodPattern inherits DesignPattern
+{ 
+   
+    // 添加具体Product
+    operation AddConProduct(conPdt:uml::Class):Void 
+    pre AddConProductPre is 
+    do      
+      not self.ConPdts.contains(conPdt)
+    end
+    post AddConProductPost is
+    do
+      self.ConPdts.contains(conPdt) and
+      Inherit(conPdt,self.Product)
+    end
+    is
+    do
+      self.umlModel.packagedElement.add(conPdt)
+      self.ConPdts.add(conPdt)
+      createGeneralization(conPdt, self.Product)
+    end
+    
+    // 添加具体ProductE
+    operation AddConProductE(conPdtN:String):uml::Class
+    pre AddConProductE is
+    do
+      NotNull(conPdtN)
+    end
+    is
+    do
+      var newPdt:uml::Class init uml::Class.new
+      newPdt.name:=conPdtN
+      
+      AddConProduct(newPdt)
+      result:=newPdt
+    end
+    
+    //添加具体Creator
+    operation AddConCreator(conCrt:uml::Class,confm:uml::Operation,ThePdt:uml::Class):Void 
+    pre AddConCreatorPre is
+    do
+      not self.ConCrts.contains(conCrt) and
+      not self.ConFatMtds.contains(confm) and
+      self.ConPdts.contains(ThePdt)
+    end
+    post AddConCreatorPost is
+    do
+      self.ConCrts.contains(conCrt) and
+      Inherit(conCrt,Creator) and
+      self.ConFatMtds.contains(confm) and
+      HasOperation(conCrt,confm) and
+      ReturnType(confm, self.Product) and
+      self.ConCrtsDepConPdts.exists{asso|HasDependency(conCrt,asso,ThePdt)} 
+    end
+    is
+    do
+      //1. 
+      self.umlModel.packagedElement.add(conCrt)
+      self.ConCrts.add(conCrt)
+      //2.
+      conCrt.ownedOperation.add(confm)
+      setRetType(confm, self.Product)
+      self.ConFatMtds.add(confm)
+      //3.
+      createGeneralization(conCrt, self.Creator)
+      //4.
+      var newdep:uml::Dependency init uml::Dependency.new
+      newdep:=createDependency(self.umlModel,conCrt,ThePdt)  
+      self.ConCrtsDepConPdts.add(newdep)            
+    end
+    
+    //添加具体CreatorE
+    operation AddConCreatorE(conCrtN:String,confmN:String,ThePdt:uml::Class):uml::Class 
+    pre AddConCreatorEPre is
+    do
+      NotNull(conCrtN) and
+      self.ConPdts.contains(ThePdt)
+    end
+    is
+    do
+      if(Null(confmN))
+      then confmN:="FactoryMethod"
+      end      
+      //1. 
+      var conCrt:uml::Class init uml::Class.new
+      conCrt.name:=conCrtN
+      //2.
+      var confm:uml::Operation init uml::Operation.new
+      confm.name:=confmN
+      //3.
+      AddConCreator(conCrt,confm,ThePdt)
+      result:=conCrt
+    end	    
+}
+
+

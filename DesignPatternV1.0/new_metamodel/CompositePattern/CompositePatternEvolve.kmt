@@ -1,0 +1,109 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "CompositePatternStruct.kmt" 
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class CompositePattern inherits DesignPattern 
+{    	   
+    // Evolution Rule 1: Add a composite
+    operation AddComposite(theCom:uml::Class,
+    AddOp:uml::Operation,RemOp:uml::Operation,GetChdOp:uml::Operation,
+    AddPa:uml::Parameter,RemPa:uml::Parameter,GetChdPa:uml::Parameter,
+    ChildrenName:String):Void  
+    is do
+      // 1. Add theCom 
+      self.umlModel.packagedElement.add(theCom)
+      self.Composites.add(theCom)
+      // 2. Add Operations
+      theCom.ownedOperation.add(AddOp)
+      self.ComAdds.add(AddOp)
+      theCom.ownedOperation.add(RemOp)
+      self.ComRemoves.add(RemOp)
+      theCom.ownedOperation.add(GetChdOp)
+      setRetType(GetChdOp, self.Component)
+      self.ComGetChildren.add(GetChdOp)
+      // 3. Add Parameters
+      AddOp.ownedParameter.add(AddPa)
+      self.ComAddsPas.add(AddPa)
+      RemOp.ownedParameter.add(RemPa)
+      self.ComRemovesPas.add(RemPa)
+      GetChdOp.ownedParameter.add(GetChdPa)
+      self.ComGetChildsPas.add(GetChdPa)
+      // 4. Hierarchy
+      createGeneralization(theCom, self.Component)	
+      // 5. Association
+      var newasso:uml::Association init Association.new
+	  newasso:=createAssociation(self.umlModel,
+		theCom,"",1,1,false,AggregationKind.none,
+        self.Component,ChildrenName,0,-1,true,AggregationKind.composite)
+      self.CpsAssCpn.add(newasso)  
+     end   
+     
+     operation AddCompositeE(theComN:String,ChildrenName:String):uml::Class is 
+     do
+       var newtheCom:uml::Class init uml::Class.new	       
+	   newtheCom.name:=theComN
+	   
+       var newAddop:uml::Operation init uml::Operation.new	   
+	   newAddop.name:=self.Add.name
+	   
+	   var newRemop:uml::Operation init uml::Operation.new	   
+	   newRemop.name:=self.Remove.name
+	   	   
+	   var newGetChildop:uml::Operation init uml::Operation.new	   
+	   newGetChildop.name:=self.GetChild.name
+	   
+	   var newAddpa:uml::Parameter init uml::Parameter.new
+	   newAddpa.name:=self.AddPa.name
+	   newAddpa.type:=self.AddPa.type
+	   
+	   var newRemovepa:uml::Parameter init uml::Parameter.new
+	   newRemovepa.name:=self.RemovePa.name
+	   newRemovepa.type:=self.RemovePa.type
+	   
+	   var newGetChildpa:uml::Parameter init uml::Parameter.new
+	   newGetChildpa.name:=self.GetChildPa.name
+	   newGetChildpa.type:=self.GetChildPa.type
+	   
+	   AddComposite(newtheCom,newAddop,newRemop,newGetChildop,
+	          newAddpa,newRemovepa,newGetChildpa,ChildrenName)	  
+	   
+	   result:=newtheCom        
+     end
+    
+    // Evolution Rule 2: Add a leaf
+    operation AddALeaf(theLeaf:uml::Class):Void is
+    do
+      self.umlModel.packagedElement.add(theLeaf)
+      self.Leaves.add(theLeaf)
+      createGeneralization(theLeaf, self.Component)
+    end
+    
+    operation AddALeafE(theLeafN:String):uml::Class is
+    do
+      var newtheLeaf:uml::Class init uml::Class.new	       
+	  newtheLeaf.name:=theLeafN
+	  AddALeaf(newtheLeaf)
+	  result:=newtheLeaf
+	end
+    
+    
+       
+}
+
+

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_goeYccL3EeCMHdFjKcVL4w" name="Composite1">
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_goeYcsL3EeCMHdFjKcVL4w" name="Integer"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_goeYc8L3EeCMHdFjKcVL4w" name="String"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_goeYdML3EeCMHdFjKcVL4w" name="Boolean"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_goeYdcL3EeCMHdFjKcVL4w" name="Component" isAbstract="true">
+    <ownedOperation xmi:id="_goeYdsL3EeCMHdFjKcVL4w" name="Add">
+      <ownedParameter xmi:id="_goeYd8L3EeCMHdFjKcVL4w" name="component" type="_goeYdcL3EeCMHdFjKcVL4w"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_goeYeML3EeCMHdFjKcVL4w" name="Remove">
+      <ownedParameter xmi:id="_goeYecL3EeCMHdFjKcVL4w" name="component" type="_goeYdcL3EeCMHdFjKcVL4w"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_goeYesL3EeCMHdFjKcVL4w" name="GetChild">
+      <ownedParameter xmi:id="_goeYe8L3EeCMHdFjKcVL4w" type="_goeYdcL3EeCMHdFjKcVL4w" direction="return"/>
+      <ownedParameter xmi:id="_goeYfML3EeCMHdFjKcVL4w" name="index" type="_goeYcsL3EeCMHdFjKcVL4w"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_goeYfcL3EeCMHdFjKcVL4w" name="MyComposite1">
+    <generalization xmi:id="_goeYfsL3EeCMHdFjKcVL4w" general="_goeYdcL3EeCMHdFjKcVL4w"/>
+    <ownedAttribute xmi:id="_goeYf8L3EeCMHdFjKcVL4w" name="children1" type="_goeYdcL3EeCMHdFjKcVL4w" aggregation="composite" association="_goeYj8L3EeCMHdFjKcVL4w">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_goeYgML3EeCMHdFjKcVL4w" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_goeYgcL3EeCMHdFjKcVL4w"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_goeYgsL3EeCMHdFjKcVL4w" name="Add" bodyCondition="_goeYg8L3EeCMHdFjKcVL4w">
+      <ownedRule xmi:id="_goeYg8L3EeCMHdFjKcVL4w" name="AddBody">
+        <nameExpression xmi:id="_goeYhML3EeCMHdFjKcVL4w" symbol="{ this.children1.add(component);}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_goeYhcL3EeCMHdFjKcVL4w" name="component" type="_goeYdcL3EeCMHdFjKcVL4w"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_goeYhsL3EeCMHdFjKcVL4w" name="Remove" bodyCondition="_goeYh8L3EeCMHdFjKcVL4w">
+      <ownedRule xmi:id="_goeYh8L3EeCMHdFjKcVL4w" name="RemoveBody">
+        <nameExpression xmi:id="_goeYiML3EeCMHdFjKcVL4w" symbol="{ this.children1.remove(component);}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_goeYicL3EeCMHdFjKcVL4w" name="component" type="_goeYdcL3EeCMHdFjKcVL4w"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_goeYisL3EeCMHdFjKcVL4w" name="GetChild" bodyCondition="_goeYi8L3EeCMHdFjKcVL4w">
+      <ownedRule xmi:id="_goeYi8L3EeCMHdFjKcVL4w" name="GetChildBody">
+        <nameExpression xmi:id="_goeYjML3EeCMHdFjKcVL4w" symbol="{ return this.children1.get(index);}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_goeYjcL3EeCMHdFjKcVL4w" type="_goeYdcL3EeCMHdFjKcVL4w" direction="return"/>
+      <ownedParameter xmi:id="_goeYjsL3EeCMHdFjKcVL4w" name="index" type="_goeYcsL3EeCMHdFjKcVL4w"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_goeYj8L3EeCMHdFjKcVL4w" memberEnd="_goeYkML3EeCMHdFjKcVL4w _goeYf8L3EeCMHdFjKcVL4w">
+    <ownedEnd xmi:id="_goeYkML3EeCMHdFjKcVL4w" name="" type="_goeYfcL3EeCMHdFjKcVL4w" association="_goeYj8L3EeCMHdFjKcVL4w">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_goeYkcL3EeCMHdFjKcVL4w" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_goeYksL3EeCMHdFjKcVL4w" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_goeYk8L3EeCMHdFjKcVL4w" name="MyComposite2">
+    <generalization xmi:id="_goeYlML3EeCMHdFjKcVL4w" general="_goeYdcL3EeCMHdFjKcVL4w"/>
+    <ownedAttribute xmi:id="_goeYlcL3EeCMHdFjKcVL4w" name="children2" type="_goeYdcL3EeCMHdFjKcVL4w" aggregation="composite" association="_goeYpcL3EeCMHdFjKcVL4w">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_goeYlsL3EeCMHdFjKcVL4w" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_goeYl8L3EeCMHdFjKcVL4w"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_goeYmML3EeCMHdFjKcVL4w" name="Add" bodyCondition="_goeYmcL3EeCMHdFjKcVL4w">
+      <ownedRule xmi:id="_goeYmcL3EeCMHdFjKcVL4w" name="AddBody">
+        <nameExpression xmi:id="_goeYmsL3EeCMHdFjKcVL4w" symbol="{ this.children2.add(component);}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_goeYm8L3EeCMHdFjKcVL4w" name="component" type="_goeYdcL3EeCMHdFjKcVL4w"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_goeYnML3EeCMHdFjKcVL4w" name="Remove" bodyCondition="_goeYncL3EeCMHdFjKcVL4w">
+      <ownedRule xmi:id="_goeYncL3EeCMHdFjKcVL4w" name="RemoveBody">
+        <nameExpression xmi:id="_goeYnsL3EeCMHdFjKcVL4w" symbol="{ this.children2.remove(component);}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_goeYn8L3EeCMHdFjKcVL4w" name="component" type="_goeYdcL3EeCMHdFjKcVL4w"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_goeYoML3EeCMHdFjKcVL4w" name="GetChild" bodyCondition="_goeYocL3EeCMHdFjKcVL4w">
+      <ownedRule xmi:id="_goeYocL3EeCMHdFjKcVL4w" name="GetChildBody">
+        <nameExpression xmi:id="_goeYosL3EeCMHdFjKcVL4w" symbol="{ return this.children2.get(index);}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_goeYo8L3EeCMHdFjKcVL4w" type="_goeYdcL3EeCMHdFjKcVL4w" direction="return"/>
+      <ownedParameter xmi:id="_goeYpML3EeCMHdFjKcVL4w" name="index" type="_goeYcsL3EeCMHdFjKcVL4w"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_goeYpcL3EeCMHdFjKcVL4w" memberEnd="_goeYpsL3EeCMHdFjKcVL4w _goeYlcL3EeCMHdFjKcVL4w">
+    <ownedEnd xmi:id="_goeYpsL3EeCMHdFjKcVL4w" name="" type="_goeYk8L3EeCMHdFjKcVL4w" association="_goeYpcL3EeCMHdFjKcVL4w">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_goeYp8L3EeCMHdFjKcVL4w" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_goeYqML3EeCMHdFjKcVL4w" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_goeYqcL3EeCMHdFjKcVL4w" name="MyLeaf1">
+    <generalization xmi:id="_goeYqsL3EeCMHdFjKcVL4w" general="_goeYdcL3EeCMHdFjKcVL4w"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_goeYq8L3EeCMHdFjKcVL4w" name="MyLeaf2">
+    <generalization xmi:id="_goeYrML3EeCMHdFjKcVL4w" general="_goeYdcL3EeCMHdFjKcVL4w"/>
+  </packagedElement>
+</uml:Model>

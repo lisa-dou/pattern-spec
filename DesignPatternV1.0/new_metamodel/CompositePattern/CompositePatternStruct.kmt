@@ -1,0 +1,72 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+class CompositePattern inherits DesignPattern 
+{  
+    // The Component Part
+    reference Component:uml::Class[1..1]
+    reference Add:uml::Operation[1..1]
+    reference Remove:uml::Operation[1..1]
+    reference GetChild:uml::Operation[1..1]
+    reference AddPa:uml::Parameter[1..1]
+    reference RemovePa:uml::Parameter[1..1]
+    reference GetChildPa:uml::Parameter[1..1]
+    // The Composite Part
+    reference Composites:uml::Class[0..*]
+    reference ComAdds:uml::Operation[0..*]
+    reference ComRemoves:uml::Operation[0..*]
+    reference ComGetChildren:uml::Operation[0..*]
+    reference ComAddsPas:uml::Parameter[0..*]
+    reference ComRemovesPas:uml::Parameter[0..*]
+    reference ComGetChildsPas:uml::Parameter[0..*]
+    reference CpsAssCpn:uml::Association[0..*]
+    // The Leaves Part
+    reference Leaves:uml::Class[0..*]
+    
+    inv spec is  
+    do              
+       // Component
+       IsAbstract(self.Component) and
+       HasOperation(self.Component, self.Add) and
+       HasOperation(self.Component, self.Remove) and
+       HasOperation(self.Component, self.GetChild) and
+       HasParameter(self.Add, self.AddPa) and
+       HasParameter(self.Remove, self.RemovePa) and
+       HasParameter(self.GetChild, self.GetChildPa) and
+       HasTypePa(self.AddPa, self.Component) and
+       HasTypePa(self.RemovePa, self.Component) and
+       HasTypePa(self.GetChildPa, self.IntPrimType) and
+       ReturnType(self.GetChild, self.Component) and
+       // Composites
+       HasOpOtO(self.Composites, self.ComAdds) and
+       HasOpOtO(self.Composites, self.ComRemoves) and
+       HasOpOtO(self.Composites, self.ComGetChildren) and
+       HasParaOtO(self.ComAdds, self.ComAddsPas) and
+       HasParaOtO(self.ComRemoves, self.ComRemovesPas) and
+       HasParaOtO(self.ComGetChildren, self.ComGetChildsPas) and
+       Hierarchy(self.Composites, self.Component) and       
+       self.Composites.forAll{com|
+       self.CpsAssCpn.exists{asso| HasAssociation(com,asso, self.Component)}} and
+       // Leaves
+       Hierarchy(self.Leaves, self.Component)
+    end   
+}
+
+

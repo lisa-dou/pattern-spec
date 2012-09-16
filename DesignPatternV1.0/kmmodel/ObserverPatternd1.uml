@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_ZVdkILKsEeC6XPzOROLpvw" name="ObserverPatternd1">
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_ZVdkIbKsEeC6XPzOROLpvw" name="Integer"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_ZVdkIrKsEeC6XPzOROLpvw" name="String"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_ZVdkI7KsEeC6XPzOROLpvw" name="Boolean"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_ZVdkJLKsEeC6XPzOROLpvw" name="Observer" isAbstract="true">
+    <ownedOperation xmi:id="_ZVdkJbKsEeC6XPzOROLpvw" name="Update" isAbstract="true"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_ZVdkJrKsEeC6XPzOROLpvw" name="Subject" isAbstract="true">
+    <ownedAttribute xmi:id="_ZVdkJ7KsEeC6XPzOROLpvw" name="observers" type="_ZVdkJLKsEeC6XPzOROLpvw" association="_ZVdkL7KsEeC6XPzOROLpvw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ZVdkKLKsEeC6XPzOROLpvw" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ZVdkKbKsEeC6XPzOROLpvw"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_ZVdkKrKsEeC6XPzOROLpvw" name="Attach">
+      <ownedParameter xmi:id="_ZVdkK7KsEeC6XPzOROLpvw" name="obs" type="_ZVdkJLKsEeC6XPzOROLpvw"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_ZVdkLLKsEeC6XPzOROLpvw" name="Detach">
+      <ownedParameter xmi:id="_ZVdkLbKsEeC6XPzOROLpvw" name="obs" type="_ZVdkJLKsEeC6XPzOROLpvw"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_ZVdkLrKsEeC6XPzOROLpvw" name="Notify"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_ZVdkL7KsEeC6XPzOROLpvw" memberEnd="_ZVdkMLKsEeC6XPzOROLpvw _ZVdkJ7KsEeC6XPzOROLpvw">
+    <ownedEnd xmi:id="_ZVdkMLKsEeC6XPzOROLpvw" name="" type="_ZVdkJrKsEeC6XPzOROLpvw" association="_ZVdkL7KsEeC6XPzOROLpvw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ZVdkMbKsEeC6XPzOROLpvw" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ZVdkMrKsEeC6XPzOROLpvw" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Model>

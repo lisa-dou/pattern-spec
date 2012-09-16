@@ -1,0 +1,96 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+class MediatorPattern inherits DesignPattern
+{
+	// Abstract Mediator
+	reference Mediator : uml::Class[1..1]
+		
+	reference Connect:uml::Operation[1..1]	
+	reference ConPara1:uml::Parameter[1..1]	
+	reference ConPara2:uml::Parameter[1..1]
+	
+	reference Disconnect:uml::Operation[1..1]	
+	reference DisconPara1:uml::Parameter[1..1]	
+	reference DisconPara2:uml::Parameter[1..1]
+	
+	reference PutMs:uml::Operation[1..1]
+	reference PutPara1:uml::Parameter[1..1]	
+	reference PutPara2:uml::Parameter[1..1]	
+	reference PutPara3:uml::Parameter[1..1]	
+	reference PutPara4:uml::Parameter[1..1]	
+	
+	reference GetMs:uml::Operation[1..1]	
+	reference GetPara1:uml::Parameter[1..1]
+	reference GetPara2:uml::Parameter[1..1]
+	
+	reference Connected:uml::Operation[1..1]	
+	reference ContdPara1:uml::Parameter[1..1]	
+	reference ContdPara2:uml::Parameter[1..1]	
+	reference Sender:uml::Operation[1..1]
+	reference SndPara1:uml::Parameter[1..1]
+	reference SndPara2:uml::Parameter[1..1]
+	reference Receiver:uml::Operation[1..1]
+	reference RecPara1:uml::Parameter[1..1]
+	reference RecPara2:uml::Parameter[1..1]
+	
+	reference AbsMedMboxAsso:uml::Association[1..1]
+	reference AbsMedColAsso:uml::Association[1..1]
+	
+	// Mail Box
+	reference Message:uml::Class[1..1]	
+	reference MailBox:uml::Class[1..1]
+	reference MbAssoRec:uml::Association[1..1]
+	reference MbAssoSnd:uml::Association[1..1]
+	reference MbAssoMess:uml::Association[1..1]
+	
+	// Abstract Colleague
+	reference Colleague : uml::Class[1..1]
+	reference AbsColAssoAbsMed:uml::Association[1..1]	
+	
+	// Concrete Mediator
+	reference ConMeds:uml::Class[0..*]
+	
+	// Concrete Colleague
+	reference ConCols : uml::Class[0..*]
+	
+	
+	inv struct_spec is  
+    do            
+       IsAbstract(self.Mediator) and
+       HasOperation(self.Mediator, self.Connect) and
+       HasOperation(self.Mediator, self.Disconnect) and
+       HasOperation(self.Mediator, self.PutMs) and
+       HasOperation(self.Mediator, self.GetMs) and
+       HasParameter(self.Connect, self.ConPara1) and
+       HasParameter(self.Connect, self.ConPara2) and
+       HasTypePa(self.PutPara1, self.Colleague) and
+       HasTypePa(self.PutPara2, self.Colleague) and
+       HasTypePa(self.PutPara3, self.MailBox) and
+       HasTypePa(self.PutPara4, self.Message)
+	     
+    end 
+    
+
+	
+
+}
+
+
+

@@ -1,0 +1,119 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "platform:/resource/DesignPatternV0.1/new_metamodel/UMLWaving.kmt" 
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+    
+
+
+class ObserverPattern inherits DesignPattern
+{    
+    //1
+	reference Observer : uml::Class[1..1]
+    //2
+	reference ConObss : uml::Class[0..*]
+    //3
+	reference Subject : uml::Class[1..1]
+	//4
+	reference ConSubs : uml::Class[0..*]
+	//5
+	reference ConObsSts : uml::Property[0..*]
+	//6
+	reference ConSubSts : uml::Property[0..*]
+	//7
+	reference Attach : uml::Operation[1..1]
+	//8
+	reference AttachPara : uml::Parameter[1..1]
+	//9
+	reference Detach : uml::Operation[1..1]
+	//10
+	reference DetachPara : uml::Parameter[1..1]
+	//11
+	reference Notify : uml::Operation[1..1]
+	//12
+	reference Update : uml::Operation[1..1]
+	//13
+	reference ConSubGetStOps : uml::Operation[0..*]
+	//14
+	reference ConSubSetStOps : uml::Operation[0..*]
+	//15
+	reference ConObsUpdOps : uml::Operation[0..*]
+	//16
+	reference SubAsObs : uml::Association[1..1]
+	//17
+	reference ConobsAsConsub : uml::Association[0..*]
+	//
+	// Dynamic Relations
+	
+	reference Attached : Operation[1..1]
+    reference AttachedPara : Parameter[1..1]
+ 
+    reference Updated : Operation[1..1] 
+    reference ConUpdated : Operation[0..*]
+    
+	
+	
+	inv struct_spec is  
+    do          
+       
+       IsAbstract(self.Observer) and
+       IsAbstract(self.Subject)  and   
+       Hierarchy(self.ConObss, self.Observer) and
+       Hierarchy(self.ConSubs, self.Subject) and
+       HasAttOtO(self.ConObss, self.ConObsSts) and
+       HasAttOtO(self.ConSubs, self.ConSubSts) and
+       HasOperation(self.Subject,self.Attach) and
+       HasParameter(self.Attach, self.AttachPara) and
+	   HasOperation(self.Subject, self.Detach) and
+	   HasParameter(self.Detach, self.DetachPara) and
+	   HasOperation(self.Subject, self.Notify) and
+	   HasOperation(self.Observer, self.Update) and
+	   IsAbstractOp(self.Update) and
+	   HasOpOtO(self.ConObss, self.ConObsUpdOps) and   
+	   HasOpOtO(self.ConSubs, self.ConSubGetStOps) and
+	   HasOpOtO(self.ConSubs, self.ConSubSetStOps) and	   
+	   HasAssociation(self.Observer, self.SubAsObs, self.Subject)   
+    end 
+    
+   operation GetListeningTo(cls : uml::Class) : uml::Property 
+   pre GetLisTo is
+   do
+     self.ConobsAsConsub.select{as|as.memberEnd.exists{me| me.type==cls}}.size==1
+   end
+   is
+   do
+     var asso:uml::Association init uml::Association.new
+     asso:=self.ConobsAsConsub.select{as|as.memberEnd.exists{me| me.type==cls}}.at(0)
+     result:=asso.memberEnd.select{me|me.type!=cls}.at(0)   
+   end       
+   
+   operation GetState(cls: uml::Class, pros:uml::Property[0..*]):uml::Property[0..1] 
+   pre GetState is
+   do
+     pros.select{p|cls.ownedAttribute.contains(p)}.size==1
+   end
+   is
+   do
+     //stdio.writeln("The size is "+pros.select{p|cls.ownedAttribute.contains(p)}.size.toString())
+     result:=pros.select{p|cls.ownedAttribute.contains(p)}.at(0)
+   end  	     
+  
+   
+     	    
+}
+
+

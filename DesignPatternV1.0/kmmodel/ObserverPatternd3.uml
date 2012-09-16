@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_1G6cULNxEeCgSNNqKYYJZA" name="ObserverPatternd3">
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_1G6cUbNxEeCgSNNqKYYJZA" name="Integer"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_1G6cUrNxEeCgSNNqKYYJZA" name="String"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_1G6cU7NxEeCgSNNqKYYJZA" name="Boolean"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_1G6cVLNxEeCgSNNqKYYJZA" name="Observer" isAbstract="true">
+    <ownedOperation xmi:id="_1G6cVbNxEeCgSNNqKYYJZA" name="Update" isAbstract="true"/>
+    <ownedOperation xmi:id="_1G6cVrNxEeCgSNNqKYYJZA" name="Updated" isAbstract="true">
+      <ownedParameter xmi:id="_1G6cV7NxEeCgSNNqKYYJZA" type="_1G6cU7NxEeCgSNNqKYYJZA" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_1G6cWLNxEeCgSNNqKYYJZA" name="Subject" isAbstract="true">
+    <ownedAttribute xmi:id="_1G6cWbNxEeCgSNNqKYYJZA" name="observers" type="_1G6cVLNxEeCgSNNqKYYJZA" association="_1G6cdrNxEeCgSNNqKYYJZA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_1G6cWrNxEeCgSNNqKYYJZA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_1G6cW7NxEeCgSNNqKYYJZA"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_1G6cXLNxEeCgSNNqKYYJZA" name="Attach" precondition="_1G6cXbNxEeCgSNNqKYYJZA" postcondition="_1G6cX7NxEeCgSNNqKYYJZA" bodyCondition="_1G6cYbNxEeCgSNNqKYYJZA">
+      <ownedRule xmi:id="_1G6cXbNxEeCgSNNqKYYJZA" name="AttachPre">
+        <nameExpression xmi:id="_1G6cXrNxEeCgSNNqKYYJZA" symbol="//@ requires !Attached(obs);"/>
+      </ownedRule>
+      <ownedRule xmi:id="_1G6cX7NxEeCgSNNqKYYJZA" name="AttachPost">
+        <nameExpression xmi:id="_1G6cYLNxEeCgSNNqKYYJZA" symbol="//@ ensures Attached(obs);"/>
+      </ownedRule>
+      <ownedRule xmi:id="_1G6cYbNxEeCgSNNqKYYJZA" name="AttachBody">
+        <nameExpression xmi:id="_1G6cYrNxEeCgSNNqKYYJZA" symbol="{ this.observers.add(obs);}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_1G6cY7NxEeCgSNNqKYYJZA" name="obs" type="_1G6cVLNxEeCgSNNqKYYJZA"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_1G6cZLNxEeCgSNNqKYYJZA" name="Detach" precondition="_1G6cZbNxEeCgSNNqKYYJZA" postcondition="_1G6cabNxEeCgSNNqKYYJZA" bodyCondition="_1G6cZ7NxEeCgSNNqKYYJZA">
+      <ownedRule xmi:id="_1G6cZbNxEeCgSNNqKYYJZA" name="DetachPre">
+        <nameExpression xmi:id="_1G6cZrNxEeCgSNNqKYYJZA" symbol="//@ requires Attached(obs);"/>
+      </ownedRule>
+      <ownedRule xmi:id="_1G6cZ7NxEeCgSNNqKYYJZA" name="DetachBody">
+        <nameExpression xmi:id="_1G6caLNxEeCgSNNqKYYJZA" symbol="{ this.observers.remove(obs);}"/>
+      </ownedRule>
+      <ownedRule xmi:id="_1G6cabNxEeCgSNNqKYYJZA" name="DetachPost">
+        <nameExpression xmi:id="_1G6carNxEeCgSNNqKYYJZA" symbol="//@ ensures !Attached(obs);"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_1G6ca7NxEeCgSNNqKYYJZA" name="obs" type="_1G6cVLNxEeCgSNNqKYYJZA"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_1G6cbLNxEeCgSNNqKYYJZA" name="Notify" postcondition="_1G6cbbNxEeCgSNNqKYYJZA" bodyCondition="_1G6cb7NxEeCgSNNqKYYJZA">
+      <ownedRule xmi:id="_1G6cbbNxEeCgSNNqKYYJZA" name="NotifyPost">
+        <nameExpression xmi:id="_1G6cbrNxEeCgSNNqKYYJZA" symbol="//@ ensures (\forall Observer obs;Attached(obs)==>obs.Updated());"/>
+      </ownedRule>
+      <ownedRule xmi:id="_1G6cb7NxEeCgSNNqKYYJZA" name="NotifyBody">
+        <nameExpression xmi:id="_1G6ccLNxEeCgSNNqKYYJZA" symbol="{ for(Iterator&lt;Observer> itobs=this.observers.iterator();itobs.hasNext();)&#xA;{ Observer tempobs=itobs.next();&#xA;tempobs.Update(); } }"/>
+      </ownedRule>
+    </ownedOperation>
+    <ownedOperation xmi:id="_1G6ccbNxEeCgSNNqKYYJZA" name="Attached" bodyCondition="_1G6ccrNxEeCgSNNqKYYJZA">
+      <ownedRule xmi:id="_1G6ccrNxEeCgSNNqKYYJZA" name="AttachedBody">
+        <nameExpression xmi:id="_1G6cc7NxEeCgSNNqKYYJZA" symbol="{ return this.observers.contains(obs);}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_1G6cdLNxEeCgSNNqKYYJZA" name="obs" type="_1G6cVLNxEeCgSNNqKYYJZA"/>
+      <ownedParameter xmi:id="_1G6cdbNxEeCgSNNqKYYJZA" type="_1G6cU7NxEeCgSNNqKYYJZA" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_1G6cdrNxEeCgSNNqKYYJZA" memberEnd="_1G6cd7NxEeCgSNNqKYYJZA _1G6cWbNxEeCgSNNqKYYJZA">
+    <ownedEnd xmi:id="_1G6cd7NxEeCgSNNqKYYJZA" name="" type="_1G6cWLNxEeCgSNNqKYYJZA" association="_1G6cdrNxEeCgSNNqKYYJZA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_1G6ceLNxEeCgSNNqKYYJZA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_1G6cebNxEeCgSNNqKYYJZA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_1G6cerNxEeCgSNNqKYYJZA" name="MyConSub1">
+    <generalization xmi:id="_1G6ce7NxEeCgSNNqKYYJZA" general="_1G6cWLNxEeCgSNNqKYYJZA"/>
+    <ownedAttribute xmi:id="_1G6cfLNxEeCgSNNqKYYJZA" name="conSubState" type="_1G6cUbNxEeCgSNNqKYYJZA"/>
+    <ownedOperation xmi:id="_1G6cfbNxEeCgSNNqKYYJZA" name="GetState">
+      <ownedParameter xmi:id="_1G6cfrNxEeCgSNNqKYYJZA" type="_1G6cUbNxEeCgSNNqKYYJZA" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_1G6cf7NxEeCgSNNqKYYJZA" name="SetState">
+      <ownedParameter xmi:id="_1G6cgLNxEeCgSNNqKYYJZA" name="value" type="_1G6cUbNxEeCgSNNqKYYJZA"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_1G6cgbNxEeCgSNNqKYYJZA" name="MyConObs1">
+    <generalization xmi:id="_1G6cgrNxEeCgSNNqKYYJZA" general="_1G6cVLNxEeCgSNNqKYYJZA"/>
+    <ownedAttribute xmi:id="_1G6cg7NxEeCgSNNqKYYJZA" name="conObsState" type="_1G6cUbNxEeCgSNNqKYYJZA"/>
+    <ownedAttribute xmi:id="_1G6chLNxEeCgSNNqKYYJZA" name="subject" type="_1G6cerNxEeCgSNNqKYYJZA" association="_1G6cjLNxEeCgSNNqKYYJZA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_1G6chbNxEeCgSNNqKYYJZA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_1G6chrNxEeCgSNNqKYYJZA" value="1"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_1G6ch7NxEeCgSNNqKYYJZA" name="Update"/>
+    <ownedOperation xmi:id="_1G6ciLNxEeCgSNNqKYYJZA" name="Updated" bodyCondition="_1G6cibNxEeCgSNNqKYYJZA">
+      <ownedRule xmi:id="_1G6cibNxEeCgSNNqKYYJZA" name="UpdatedBody">
+        <nameExpression xmi:id="_1G6cirNxEeCgSNNqKYYJZA" symbol="{ return this.subject.conSubState==this.conObsState;}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_1G6ci7NxEeCgSNNqKYYJZA" type="_1G6cU7NxEeCgSNNqKYYJZA" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_1G6cjLNxEeCgSNNqKYYJZA" memberEnd="_1G6cjbNxEeCgSNNqKYYJZA _1G6chLNxEeCgSNNqKYYJZA">
+    <ownedEnd xmi:id="_1G6cjbNxEeCgSNNqKYYJZA" name="" type="_1G6cgbNxEeCgSNNqKYYJZA" association="_1G6cjLNxEeCgSNNqKYYJZA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_1G6cjrNxEeCgSNNqKYYJZA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_1G6cj7NxEeCgSNNqKYYJZA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_1G6ckLNxEeCgSNNqKYYJZA" name="MyConObs2">
+    <generalization xmi:id="_1G6ckbNxEeCgSNNqKYYJZA" general="_1G6cVLNxEeCgSNNqKYYJZA"/>
+    <ownedAttribute xmi:id="_1G6ckrNxEeCgSNNqKYYJZA" name="conObsState" type="_1G6cUbNxEeCgSNNqKYYJZA"/>
+    <ownedAttribute xmi:id="_1G6ck7NxEeCgSNNqKYYJZA" name="subject" type="_1G6cerNxEeCgSNNqKYYJZA" association="_1G6cm7NxEeCgSNNqKYYJZA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_1G6clLNxEeCgSNNqKYYJZA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_1G6clbNxEeCgSNNqKYYJZA" value="1"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_1G6clrNxEeCgSNNqKYYJZA" name="Update"/>
+    <ownedOperation xmi:id="_1G6cl7NxEeCgSNNqKYYJZA" name="Updated" bodyCondition="_1G6cmLNxEeCgSNNqKYYJZA">
+      <ownedRule xmi:id="_1G6cmLNxEeCgSNNqKYYJZA" name="UpdatedBody">
+        <nameExpression xmi:id="_1G6cmbNxEeCgSNNqKYYJZA" symbol="{ return this.subject.conSubState==this.conObsState;}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_1G6cmrNxEeCgSNNqKYYJZA" type="_1G6cU7NxEeCgSNNqKYYJZA" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_1G6cm7NxEeCgSNNqKYYJZA" memberEnd="_1G6cnLNxEeCgSNNqKYYJZA _1G6ck7NxEeCgSNNqKYYJZA">
+    <ownedEnd xmi:id="_1G6cnLNxEeCgSNNqKYYJZA" name="" type="_1G6ckLNxEeCgSNNqKYYJZA" association="_1G6cm7NxEeCgSNNqKYYJZA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_1G6cnbNxEeCgSNNqKYYJZA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_1G6cnrNxEeCgSNNqKYYJZA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Model>

@@ -1,0 +1,44 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+
+package uml;
+
+
+require kermeta
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+
+
+aspect class Classifier
+{
+    // general:derived property
+    property readonly general:Classifier[0..*]
+    getter is do
+      result:=self.generalization.collect{gen|gen.general}.asOrderedSet()
+      end  
+}
+
+aspect class Operation
+{
+    property readonly type:Type[0..1]
+    getter is do
+      var pset:Parameter[0..*]
+      pset:=self.ownedParameter.select{para|para.direction==ParameterDirectionKind.return}.asOrderedSet()
+      if pset.size==1 
+      then
+        var p:Parameter 
+        p:=pset.at(0)
+        result:=p.type
+      else
+        result:=void
+      end
+    end
+    
+    
+      
+}
+      

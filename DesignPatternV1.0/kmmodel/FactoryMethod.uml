@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_LsrNILc0EeCEW8RHHutMyQ" name="FactoryMethod">
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_LsrNIbc0EeCEW8RHHutMyQ" name="Integer"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_LsrNIrc0EeCEW8RHHutMyQ" name="String"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_LsrNI7c0EeCEW8RHHutMyQ" name="Boolean"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_LsrNJLc0EeCEW8RHHutMyQ" name="Creator" isAbstract="true">
+    <ownedOperation xmi:id="_LsrNJbc0EeCEW8RHHutMyQ" name="FactoryMethod" isAbstract="true">
+      <ownedParameter xmi:id="_LsrNJrc0EeCEW8RHHutMyQ" type="_LsrNJ7c0EeCEW8RHHutMyQ" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_LsrNJ7c0EeCEW8RHHutMyQ" name="Product" isAbstract="true"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_LsrNKLc0EeCEW8RHHutMyQ" name="MyProd1">
+    <generalization xmi:id="_LsrNKbc0EeCEW8RHHutMyQ" general="_LsrNJ7c0EeCEW8RHHutMyQ"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_LsrNKrc0EeCEW8RHHutMyQ" name="MyProd2">
+    <generalization xmi:id="_LsrNK7c0EeCEW8RHHutMyQ" general="_LsrNJ7c0EeCEW8RHHutMyQ"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_LsrNLLc0EeCEW8RHHutMyQ" name="MyCreator1" clientDependency="_LsrNMrc0EeCEW8RHHutMyQ">
+    <generalization xmi:id="_LsrNLbc0EeCEW8RHHutMyQ" general="_LsrNJLc0EeCEW8RHHutMyQ"/>
+    <ownedOperation xmi:id="_LsrNLrc0EeCEW8RHHutMyQ" name="FactoryMethod" bodyCondition="_LsrNL7c0EeCEW8RHHutMyQ">
+      <ownedRule xmi:id="_LsrNL7c0EeCEW8RHHutMyQ" name="FactoryMethodBody">
+        <nameExpression xmi:id="_LsrNMLc0EeCEW8RHHutMyQ" symbol="{ return new MyProd1();}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_LsrNMbc0EeCEW8RHHutMyQ" type="_LsrNJ7c0EeCEW8RHHutMyQ" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_LsrNMrc0EeCEW8RHHutMyQ" supplier="_LsrNKLc0EeCEW8RHHutMyQ" client="_LsrNLLc0EeCEW8RHHutMyQ"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_LsrNM7c0EeCEW8RHHutMyQ" name="MyCreator2" clientDependency="_LsrNObc0EeCEW8RHHutMyQ">
+    <generalization xmi:id="_LsrNNLc0EeCEW8RHHutMyQ" general="_LsrNJLc0EeCEW8RHHutMyQ"/>
+    <ownedOperation xmi:id="_LsrNNbc0EeCEW8RHHutMyQ" name="FactoryMethod" bodyCondition="_LsrNNrc0EeCEW8RHHutMyQ">
+      <ownedRule xmi:id="_LsrNNrc0EeCEW8RHHutMyQ" name="FactoryMethodBody">
+        <nameExpression xmi:id="_LsrNN7c0EeCEW8RHHutMyQ" symbol="{ return new MyProd2();}"/>
+      </ownedRule>
+      <ownedParameter xmi:id="_LsrNOLc0EeCEW8RHHutMyQ" type="_LsrNJ7c0EeCEW8RHHutMyQ" direction="return"/>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_LsrNObc0EeCEW8RHHutMyQ" supplier="_LsrNKrc0EeCEW8RHHutMyQ" client="_LsrNM7c0EeCEW8RHHutMyQ"/>
+</uml:Model>

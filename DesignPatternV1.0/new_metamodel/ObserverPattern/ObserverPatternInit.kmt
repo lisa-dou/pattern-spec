@@ -1,0 +1,95 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+
+require "ObserverPatternStruct.kmt"  
+ 
+ 
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class ObserverPattern inherits DesignPattern
+{
+     method CreateInitStruct():Void is 
+     do       
+        super()
+        //1
+        self.Observer:=createClass(umlModel,"Observer",true)   
+                  
+        //2        
+        //3
+        self.Subject:=createClass(umlModel,"Subject",true)
+        //4
+        //5
+        //6
+        //7
+        self.Attach:=createOperation(self.Subject,"Attach",false)
+        //8        
+        self.AttachPara:=createParameter(self.Attach,"obs",self.Observer)
+        //9
+        self.Detach:=createOperation(self.Subject,"Detach",false)
+        //10
+        self.DetachPara:=createParameter(self.Detach,"obs",self.Observer)     
+        //11
+        self.Notify:=createOperation(self.Subject,"Notify",false)
+        //12
+        self.Update:=createOperation(self.Observer,"Update",true)
+        //13
+        //14
+        //15
+        //16        
+        self.SubAsObs:=createAssociation(umlModel,
+        self.Subject,"",1,1,false,AggregationKind.none,
+        self.Observer,"observers",0,-1,true,AggregationKind.none)
+        //17      
+        // The Dynamic Relations
+        
+        self.Attached:=createOperation(self.Subject,"Attached",false)
+	    self.AttachedPara:=createParameter(self.Attached,"obs", self.Observer)
+	    setRetType(self.Attached,self.BoolPrimType)	
+	    
+	    self.Updated:=createOperation(self.Observer, "Updated", true)	   
+	    setRetType(self.Updated, self.BoolPrimType)	
+	    
+	     /*
+	    self.ConObss.each{conobs|
+		  var newupdated:Operation init Operation.new
+		  newupdated.name:="Updated"
+		  self.Updated.add(newupdated)
+		  conobs.ownedOperation.add(newupdated)
+		  var par1:Parameter init Parameter.new
+		  var par2:Parameter init Parameter.new  
+		  par1.name:="sub"
+		  par2.name:="obs"
+		  par1.type:=self.Subject
+		  par2.type:=self.Observer
+		  self.UpdatedParas1.add(par1)
+		  self.UpdatedParas2.add(par2)
+		  newupdated.ownedParameter.add(par1)
+		  newupdated.ownedParameter.add(par2)
+		  setRetType(newupdated,self.BoolPrimType)
+		  } 
+	    
+       
+        var c111:uml::Class init uml::Class.new
+        c111.name:="Hello"
+        self.ConObss.add(c111)      
+        */  
+        end
+   
+     	    
+}
+
+

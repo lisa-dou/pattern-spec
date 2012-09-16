@@ -1,0 +1,797 @@
+package designPatterns;
+
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+
+
+abstract class DesignPattern
+{	
+	
+	
+	operation setAsAbstract(c:uml::Class):Void is
+	do
+	  c.isAbstract:=true
+	end
+	 
+	operation createClass(umlmodel:uml::Model,classname:String,~abstract:Boolean):uml::Class is
+	do
+	  var c:uml::Class init uml::Class.new
+	  c.name:=classname
+	  umlmodel.packagedElement.add(c)
+	  c.isAbstract:=~abstract
+	  result:=c
+	  stdio.writeln("Class "+classname+" is created")
+	end  
+	
+	operation setRetType(op:uml::Operation,retty:uml::Type):Void 
+	pre zeroRettype is
+	do
+	  op.ownedParameter.select{para|para.direction==ParameterDirectionKind.return}.size==0
+	end
+	is 
+	do	  	 
+	    var p:uml::Parameter init uml::Parameter.new
+	    p.direction:=ParameterDirectionKind.return
+	    p.type:=retty
+	    op.ownedParameter.add(p)	  
+	end  
+	
+	operation createOperation(umlclass:uml::Class,opname:String,isAbs:Boolean):uml::Operation is
+	do
+	  var o:uml::Operation init uml::Operation.new
+	  o.name:=opname
+	  umlclass.ownedOperation.add(o)	 
+	  o.isAbstract:=isAbs 
+	  result:=o
+	  stdio.writeln("Operation "+opname+" is created")
+	end
+	
+	operation createProperty(umlclass:uml::Class,proname:String,protype:uml::Type):uml::Property is
+	do
+	  var pro:Property init uml::Property.new
+	  pro.name:=proname
+	  pro.type:=protype
+	  umlclass.ownedAttribute.add(pro)
+	  result:=pro
+	  stdio.writeln("Property "+proname+" is created")
+	end
+	
+	operation createParameter(umlop:uml::Operation,paraname:String,paratype:uml::Type):uml::Parameter is
+	do
+	  var para:uml::Parameter init uml::Parameter.new
+	  para.name:=paraname
+	  para.type:=paratype
+	  umlop.ownedParameter.add(para)
+	  result:=para
+	  stdio.writeln("Parameter "+paraname+" is created")
+	end 
+	
+	operation setParameterMulit(umlpara:uml::Parameter,lower:Integer,upper:Integer):Void is
+	do
+	   var fuv:LiteralUnlimitedNatural init uml::LiteralUnlimitedNatural.new
+       fuv.~value:=upper
+       var flv:LiteralInteger init uml::LiteralInteger.new
+       flv.~value:=lower      
+	   umlpara.upperValue:=fuv
+	   umlpara.lowerValue:=flv
+	end 
+	
+	operation createDependency(model:uml::Model,client:uml::Class,supplier:uml::Class):uml::Dependency is
+	do
+	  var dep:uml::Dependency init uml::Dependency.new
+	  dep.client.add(client)
+	  dep.supplier.add(supplier)
+	  model.packagedElement.add(dep)
+	  result:=dep
+	end
+	
+	operation createGeneralization(cclass:uml::Class,sclass:uml::Class):uml::Generalization is 
+	do
+	  var g:uml::Generalization init uml::Generalization.new
+	  g.general:=sclass
+	  cclass.generalization.add(g)
+	  result:=g
+      stdio.writeln("Generalization from "+cclass.name+" to "+sclass.name+" is created")
+	end  
+	
+	operation createAssociation(umlmodel:uml::Model,
+	Ftype:uml::Class,Fname:String,Flower:Integer,Fupper:Integer,Fnaiv:Boolean,Faggkind:uml::AggregationKind,
+	Stype:uml::Class,Sname:String,Slower:Integer,Supper:Integer,Snaiv:Boolean,Saggkind:uml::AggregationKind)
+	:uml::Association is 
+	do
+	   var asso:uml::Association init uml::Association.new
+	   // First Point
+	   var fp:uml::Property init uml::Property.new
+	   fp.name:=Fname
+	   var fuv:LiteralUnlimitedNatural init uml::LiteralUnlimitedNatural.new
+       fuv.~value:=Fupper
+       var flv:LiteralInteger init uml::LiteralInteger.new
+       flv.~value:=Flower
+       fp.lowerValue:=flv
+       fp.upperValue:=fuv
+       fp.type:= Ftype
+       fp.aggregation:=Faggkind
+       
+       
+       // Second Point
+       var sp:uml::Property init uml::Property.new
+	   sp.name:=Sname
+	   var slv:LiteralInteger init uml::LiteralInteger.new
+       slv.~value:=Slower
+       var suv:LiteralUnlimitedNatural init uml::LiteralUnlimitedNatural.new       
+       suv.~value:=Supper
+       sp.lowerValue:=slv
+       sp.upperValue:=suv
+       sp.type:= Stype
+       sp.aggregation:=Saggkind
+       
+       if Fnaiv 
+       then
+         Stype.ownedAttribute.add(fp)
+       else
+         asso.ownedEnd.add(fp)
+       end
+       
+       if Snaiv 
+       then
+         Ftype.ownedAttribute.add(sp)
+       else
+         asso.ownedEnd.add(sp)
+	   end
+	   
+	   asso.memberEnd.add(fp)
+	   asso.memberEnd.add(sp)
+	   umlmodel.packagedElement.add(asso)
+	   result:=asso
+	   stdio.writeln("Association from "+Ftype.name+" to "+Stype.name+" is created")
+	end
+	 	 	 
+	operation save(name:String):Void is 
+    do
+        self.umlModel.name:=name
+        // Variable for your input EMFmodel
+        var repository:EMFRepository init EMFRepository.new		
+		var res:EMFResource
+		res?=repository.createResource(
+		"platform:/resource/DesignPatternV0.1/kmmodel/"+name+".uml",
+		"platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore")
+		res.add(self.umlModel)	
+		res.save()	
+				
+	end		
+
+    operation CreateInitStruct():Void is
+    do
+      if self.umlModel==void 
+      then
+        umlModel:=uml::Model.new
+        
+        IntPrimType:=uml::PrimitiveType.new
+        IntPrimType.name:="Integer"
+        umlModel.packagedElement.add(IntPrimType)
+        
+        StringPrimType:=uml::PrimitiveType.new
+        StringPrimType.name:="String"
+        umlModel.packagedElement.add(StringPrimType)
+        
+        BoolPrimType:=uml::PrimitiveType.new
+        BoolPrimType.name:="Boolean"
+        umlModel.packagedElement.add(BoolPrimType)
+      end
+    end
+         
+        
+	 
+	
+	reference IntPrimType : uml::PrimitiveType[1..1]
+
+	reference StringPrimType : uml::PrimitiveType[1..1]
+
+	reference BoolPrimType : uml::PrimitiveType[1..1]
+	
+	reference umlModel : uml::Model[1..1]	
+
+	operation SaveAsUML(uri : ecore::EString) : Void is
+		abstract
+
+	
+
+	operation CreatePrimitiveTypes() : ecore::EJavaObject is
+		abstract
+
+	operation ApplyPatternProfile() : Void is
+		abstract
+
+	operation CreatePatternSpecification() : Void is
+		abstract
+		
+	operation ExistsT1RelT2<T1,T2>(cs1:T1[0..*], 
+	                        cs2:T2[0..*],
+	                        relation : <[T1,T2]-> Boolean>) : Boolean is 
+	do		              
+	  result := cs1.forAll{c1|
+	            cs2.exists{c2| 
+	                        relation(c1,c2)}}
+	end 
+	
+	operation ExistsT2RelT1<T1,T2>(set1:T1[0..*],
+	                               set2:T2[0..*],
+	                               relation : <[T1,T2]-> Boolean>) : Boolean is 
+	do
+	  result:= set2.forAll{c2|
+	           set1.exists{c1|
+	                        relation(c1,c2)}}
+	end
+
+	operation UniqueT1RelT2<T1,T2>(
+	                        set1:T1[0..*],
+	                        set2:T2[0..*],
+	                        relation : <[T1,T2]-> Boolean>) : Boolean is
+	do
+	  result:= set1.forAll{f |
+	           set2.forAll{s1|
+	           set2.forAll{s2|
+	                   Implies(relation(f,s1) and relation(f,s2), s1==s2)}}} 
+	end
+	
+	operation UniqueT2RelT1<T1,T2>(
+	                        set1:T1[0..*],
+	                        set2:T2[0..*],
+	                        relation : <[T1,T2]-> Boolean>) : Boolean is
+	do
+	  result:= set2.forAll{s |
+	           set1.forAll{f1|
+	           set1.forAll{f2|
+	                   Implies(relation(f1,s) and relation(f2,s), f1==f2)}}} 
+	end
+	
+	operation HasOperationV():<[uml::Class,uml::Operation]->Boolean> is
+	do	  
+	  var f:<[uml::Class,uml::Operation]->Boolean>
+	  f:= function {c1:uml::Class,op:uml::Operation|
+	                    c1.ownedOperation.contains(op)}	  
+      result:=f	
+	end 
+	  
+	
+	operation HasOpOtOV(cset:uml::Class[0..*],opset:uml::Operation[0..*]):Boolean is
+	do
+	  result:=UniqueT2RelT1(cset, opset, HasOperationV())
+	end
+	
+	
+	operation HasAttribtueV() : <[uml::Class,uml::Property]->Boolean> is
+	do
+	  var f:<[uml::Class,uml::Property]->Boolean>
+	  f:= function {c1:uml::Class,pro:uml::Property|
+	                    c1.ownedAttribute.contains(pro)}
+	  result:=f
+	end
+	
+	//P1	
+	operation Inherit(c1:uml::Class,c2:uml::Class): Boolean is 
+	do	   
+	   result:=c1.general.contains(c2)
+	end
+	
+	//P2
+	operation Hierarchy(cset:uml::Class[0..*],c:uml::Class):Boolean is
+	do
+	   result:=cset.forAll{cls|Inherit(cls,c)}
+	end
+	
+	//P3
+	operation HasOperation(c:uml::Class,op:uml::Operation):Boolean is
+	do
+	  result:=c.ownedOperation.contains(op)
+	end
+	  
+	//P4
+	operation HasAttribute(c:uml::Class,p:uml::Property):Boolean is
+	do
+	  result:=c.ownedAttribute.contains(p)
+	end
+	
+	//P5
+	operation HasAssociation(c1:uml::Class,a:uml::Association,c2:uml::Class):Boolean is
+	do
+	  result:=a.memberEnd.exists{p1|
+	          a.memberEnd.exists{p2|
+	           (p1.type==c1 and p2.type==c2) or
+	           (p1.type==c2 and p2.type==c1)}}
+	  /*
+	  p1.type==c1 or p1.type==c2} and	           
+	          a.memberEnd.exists{p2|p2.type==c1 or p2.type==c2} 	           	           
+      */
+    end            
+
+    //P6  Begin HasAttribute
+    operation HasAttExPrp(cset:uml::Class[0..*],pset:uml::Property[0..*]):Boolean is
+    do
+      result:=cset.forAll{c|
+              pset.exists{p|
+                HasAttribute(c,p)}}
+    end
+    
+    //p7
+    operation HasAttOnePrp(cset:uml::Class[0..*],pset:uml::Property[0..*]):Boolean is
+    do
+      result:=pset.forAll{p1|
+              pset.forAll{p2|
+              cset.forAll{c|
+                not (HasAttribute(c,p1) and HasAttribute(c,p2)) or p1==p2}}}
+    end                             
+
+    //P8 
+    operation HasAttExCls(cset:uml::Class[0..*],pset:uml::Property[0..*]):Boolean is
+    do
+      result:=pset.forAll{p|
+              cset.exists{c|
+                HasAttribute(c,p)}}
+    end
+    
+    //p9
+    operation HasAttOneCls(cset:uml::Class[0..*],pset:uml::Property[0..*]):Boolean is
+    do
+      result:=cset.forAll{c1|
+              cset.forAll{c2|
+              pset.forAll{p|
+                not (HasAttribute(c1,p) and HasAttribute(c2,p)) or c1==c2}}}
+    end   
+       
+    //p10 End HasAttribute
+    operation HasAttOtO(cset:uml::Class[0..*],pset:uml::Property[0..*]):Boolean is
+    do
+      result:=HasAttExPrp(cset,pset) and HasAttOnePrp(cset,pset) and
+              HasAttExCls(cset,pset) and HasAttOnePrp(cset,pset)
+    end
+    
+    //p11 Begin HasOperation
+    operation HasOpExOp(cset:uml::Class[0..*],opset:uml::Operation[0..*]):Boolean is
+    do
+      result:= cset.forAll{c|
+              opset.exists{o|
+                HasOperation(c,o)}}
+    end
+    
+    //p12
+    operation HasOpOneOp(cset:uml::Class[0..*],opset:uml::Operation[0..*]):Boolean is
+    do
+      result:=cset.forAll{c |
+              opset.forAll{o1|
+              opset.forAll{o2|
+                not (HasOperation(c,o1) and HasOperation(c,o2)) or o1==o2}}}
+    end
+    
+    //p13
+    operation HasOpExCls(cset:uml::Class[0..*],opset:uml::Operation[0..*]):Boolean is
+    do
+      result:=opset.forAll{o|
+              cset.exists{c|
+                HasOperation(c,o)}}            
+    end
+    
+    //p14
+    operation HasOpOneCls(cset:uml::Class[0..*],opset:uml::Operation[0..*]):Boolean is
+    do
+      result:=cset.forAll{c1|
+              cset.forAll{c2|
+              opset.forAll{o |
+                not (HasOperation(c1,o) and HasOperation(c2,o)) or c1==c2}}}
+    end          
+    
+    
+    operation HasOpOtO(cset:uml::Class[0..*],opset:uml::Operation[0..*]):Boolean is
+    do
+      result:=HasOpExOp(cset,opset) and HasOpOneOp(cset,opset) and
+              HasOpExCls(cset,opset) and HasOpOneCls(cset,opset)
+    end                       
+//p15 End HasOperation
+    
+operation HasAssoExAssCls2(cs1:Class[0..*],
+          ass:Association[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=cs1.forAll{c1|
+          ass.exists{a |
+          cs2.exists{c2|
+            HasAssociation(c1,a,c2)}}}
+end
+
+operation HasAssoOneAssCls2(cs1:Class[0..*],
+          ass:Association[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=
+    cs1.forAll{c |
+    ass.forAll{a1|
+    ass.forAll{a2|
+    cs2.forAll{c1|
+    cs2.forAll{c2|  
+      Implies(
+      (HasAssociation(c,a1,c1) and HasAssociation(c,a2,c2)),
+      (a1==a2 and c1==c2)
+      )}}}}}
+end
+
+operation HasAssoExCls1Cls2(cs1:Class[0..*],
+          ass:Association[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=ass.forAll{a |
+          cs1.exists{c1|
+          cs2.exists{c2|
+            HasAssociation(c1,a,c2)}}}
+end
+
+operation HasAssoOneCls1Cls2(cs1:Class[0..*],
+          ass:Association[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=
+    ass.forAll{a |
+    cs1.forAll{s1|
+    cs1.forAll{s2|
+    cs2.forAll{c1|
+    cs2.forAll{c2|
+      not(HasAssociation(c1,a,s1) and HasAssociation(c2,a,s2))
+      or (c1==c2 and s1==s2) }}}}}
+end
+
+operation HasAssoExCls1Ass(cs1:Class[0..*],
+          ass:Association[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=cs2.forAll{c2|
+          ass.exists{a |
+          cs1.exists{c1|
+            HasAssociation(c1,a,c2)}}}
+end
+
+operation HasAssoOneCls1Ass(cs1:Class[0..*],
+          ass:Association[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=
+    cs2.forAll{c |
+    cs1.forAll{c1|
+    cs1.forAll{c2|
+    ass.forAll{a1|
+    ass.forAll{a2|
+      not(HasAssociation(c1,a1,c) and HasAssociation(c2,a2,c))
+      or (c1==c2 and a1==a2) }}}}}
+end
+
+operation HasAssoMtoMtoO(cs1:Class[0..*],
+          ass:Association[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=HasAssoExAssCls2(cs1,ass,cs2) and
+          HasAssoExCls1Cls2(cs1,ass,cs2) //and
+          //HasAssoOneAssCls2(cs1,ass,cs2) //and
+          //HasAssoOneCls1Cls2(cs1,ass,cs2)
+end
+
+operation HasAssoOtoOtoO(cs1:Class[0..*],
+          ass:Association[0..*],cs2:Class[0..*]):Boolean is 
+do
+  result:=HasAssoExAssCls2(cs1,ass,cs2) and
+          HasAssoOneAssCls2(cs1,ass,cs2) and
+          HasAssoExCls1Cls2(cs1,ass,cs2) and
+          HasAssoOneCls1Cls2(cs1,ass,cs2) and
+          HasAssoExCls1Ass(cs1,ass,cs2) and
+          HasAssoOneCls1Ass(cs1,ass,cs2)
+end
+
+operation HasAssoOtoOtoOW(cs1:Class[0..*],
+          ass:Association[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=HasAssoExAssCls2(cs1,ass,cs2) and
+          HasAssoOneAssCls2(cs1,ass,cs2) and
+          HasAssoExCls1Cls2(cs1,ass,cs2) and
+          HasAssoOneCls1Cls2(cs1,ass,cs2) and
+          HasAssoOneCls1Ass(cs1,ass,cs2)
+end
+   
+    operation HasDependency(c1:Class,dep:Dependency,c2:Class):Boolean is
+    do
+      result:=dep.client.contains(c1) and dep.supplier.contains(c2)
+    end
+    
+operation HasDepExDepCls2(cs1:Class[0..*],
+          dep:Dependency[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=cs1.forAll{c1|
+          dep.exists{a |
+          cs2.exists{c2|
+            HasDependency(c1,a,c2)}}}
+end
+
+operation HasDepOneDepCls2(cs1:Class[0..*],
+          dep:Dependency[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=
+    cs1.forAll{c | 
+    cs2.forAll{c1|
+    cs2.forAll{c2|
+    dep.forAll{a1|
+    dep.forAll{a2|
+      not(HasDependency(c,a1,c1) and HasDependency(c,a2,c2))
+      or (a1==a2 and c1==c2)}}}}}
+end
+
+operation HasDepExCls1Cls2(cs1:Class[0..*],
+          dep:Dependency[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=dep.forAll{a |
+          cs1.exists{c1|
+          cs2.exists{c2|
+            HasDependency(c1,a,c2)}}}
+end
+
+operation HasDepOneCls1Cls2(cs1:Class[0..*],
+          dep:Dependency[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=
+    dep.forAll{a |
+    cs1.forAll{s1|
+    cs1.forAll{s2|
+    cs2.forAll{c1|
+    cs2.forAll{c2|
+      not(HasDependency(c1,a,s1) and HasDependency(c2,a,s2))
+      or (c1==c2 and s1==s2) }}}}}
+end
+
+operation HasDepExCls1Dep(cs1:Class[0..*],
+          dep:Dependency[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=cs2.forAll{c2|
+          dep.exists{a |
+          cs1.exists{c1|
+            HasDependency(c1,a,c2)}}}
+end
+
+operation HasDepOneCls1Dep(cs1:Class[0..*],
+          dep:Dependency[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=
+    cs2.forAll{c |
+    cs1.forAll{c1|
+    cs1.forAll{c2|
+    dep.forAll{a1|
+    dep.forAll{a2|
+      not(HasDependency(c1,a1,c) and HasDependency(c2,a2,c))
+      or (c1==c2 and a1==a2) }}}}}
+end
+
+operation HasDepMtoMtoO(cs1:Class[0..*],
+          dep:Dependency[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=HasDepExDepCls2(cs1,dep,cs2) and
+          HasDepExCls1Cls2(cs1,dep,cs2) and
+          HasDepOneDepCls2(cs1,dep,cs2) and
+          HasDepOneCls1Cls2(cs1,dep,cs2)
+end
+
+operation HasDepOtOtO(cs1:Class[0..*],
+          dep:Dependency[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=HasDepExDepCls2(cs1,dep,cs2) and
+          HasDepOneDepCls2(cs1,dep,cs2) and
+          HasDepExCls1Cls2(cs1,dep,cs2) and
+          HasDepOneCls1Cls2(cs1,dep,cs2) and
+          HasDepExCls1Dep(cs1,dep,cs2) and
+          HasDepOneCls1Dep(cs1,dep,cs2)
+end
+
+operation HasDepOtoOtoOW(cs1:Class[0..*],
+          dep:Dependency[0..*],cs2:Class[0..*]):Boolean is
+do
+  result:=HasDepExDepCls2(cs1,dep,cs2) and
+          HasDepOneDepCls2(cs1,dep,cs2) and
+          HasDepExCls1Cls2(cs1,dep,cs2) and
+          HasDepOneCls1Cls2(cs1,dep,cs2) and
+          HasDepOneCls1Dep(cs1,dep,cs2)
+end
+    
+   
+    //px Begin HasParameter
+    operation HasParameter(op:uml::Operation,para:uml::Parameter):Boolean is
+    do
+      result:=op.ownedParameter.contains(para) 
+    end
+    
+    //P6 
+    operation HasParaExPrp(opset :uml::Operation[0..*],paset:uml::Parameter[0..*]):Boolean is
+    do
+      result:=opset.forAll{c|
+              paset.exists{p|
+                HasParameter(c,p)}}
+    end
+    
+    //p7
+    operation HasParaOnePrp(opset:uml::Operation[0..*],paset:uml::Parameter[0..*]):Boolean is
+    do
+      result:=paset.forAll{p1|
+              paset.forAll{p2|
+              opset.forAll{c|
+                not (HasParameter(c,p1) and HasParameter(c,p2)) or p1==p2}}}
+    end                             
+
+    //P8 
+    operation HasParaExCls(opset:uml::Operation[0..*],paset:uml::Parameter[0..*]):Boolean is
+    do
+      result:=paset.forAll{p|
+              opset.exists{c|
+                HasParameter(c,p)}}
+    end
+    
+    //p9
+    operation HasParaOneCls(opset:uml::Operation[0..*],paset:uml::Parameter[0..*]):Boolean is
+    do
+      result:=opset.forAll{c1|
+              opset.forAll{c2|
+              paset.forAll{p|
+                not (HasParameter(c1,p) and HasParameter(c2,p)) or c1==c2}}}
+    end   
+       
+    //p10 End HasParameter
+    operation HasParaOtO(opset:uml::Operation[0..*],paset:uml::Parameter[0..*]):Boolean is
+    do
+      result:=HasParaExPrp(opset,paset) and HasParaOnePrp(opset,paset) and
+              HasParaExCls(opset,paset) and HasParaOnePrp(opset,paset)
+    end
+    
+    //p isAbstract
+    operation IsAbstract(c:uml::Class):Boolean is
+    do
+      result:=c.isAbstract
+    end
+    
+    operation IsAbstractOp(op:uml::Operation):Boolean is
+    do
+      result:=op.isAbstract
+    end
+    
+    operation AllAbstractOp(op:uml::Operation[0..*]):Boolean is
+    do
+      result:=op.forAll{o|IsAbstractOp(o)}
+    end
+    
+    operation HasOperations(c:uml::Class,op:uml::Operation[0..*]):Boolean is
+    do
+      result:=op.forAll{o|HasOperation(c,o)}
+    end
+    
+    // String Not Null
+    operation NotNull(c:String):Boolean is 
+	do
+	  result:=c!=void and c!=""
+	end
+	
+	operation Null(c:String):Boolean is 
+	do
+	  result:=c==void or c==""
+	end
+	
+	// No name Conflict
+	operation NoConflict(name:String,namedEle:uml::Class[0..*]):Boolean is
+	do
+	  result:=namedEle.forAll{e| e.name!=name}
+	end
+	
+	operation ReturnType(op:uml::Operation,type:uml::Type):Boolean 
+	pre oneRT is
+	do
+	  op.ownedParameter.select{para|para.direction==ParameterDirectionKind.return}.size==1
+	end
+	is
+	do
+	  var p:Parameter init Parameter.new
+	  p:=op.ownedParameter.select{para|para.direction==ParameterDirectionKind.return}.at(0)
+	  result:=p.type==type
+    end	  
+    
+    operation ReturnTypes(opset:uml::Operation[0..*],type:uml::Type):Boolean is
+	do
+	  result:=opset.forAll{op|ReturnType(op,type)}
+    end	  
+	
+	operation HasTypePa(para:uml::Parameter,type:uml::Type):Boolean is
+	do
+	  result:=para.type==type
+	end
+	
+	operation HasTypePas(paset:uml::Parameter[0..*],type:uml::Type):Boolean is
+	do
+	  result:=paset.forAll{pa|HasTypePa(pa,type)}
+	end
+	
+	operation Implies(pres:Boolean,cons:Boolean):Boolean is
+	do
+	  result:= (not pres) or cons
+	end
+	
+	operation CreateSpec(op:uml::Operation,type:String,spec:String):Void is
+	do
+	  var exp:uml::StringExpression init uml::StringExpression.new
+	  exp.symbol:=spec
+	  var constr:uml::Constraint init uml::Constraint.new
+	  constr.nameExpression:=exp
+	  op.ownedRule.add(constr)
+	  	  
+	  if type=="Pre" then
+	    constr.name:=op.name+"Pre"
+	    op.precondition.add(constr)	    
+	  end
+	    
+	  if type=="Post" then
+	    constr.name:=op.name+"Post"
+	    op.postcondition.add(constr)	 
+	  end
+	  
+	  if type=="Body" then
+	    constr.name:=op.name+"Body"
+	    op.bodyCondition:=constr
+	  end  	  
+	end
+	
+	operation getAssoEndWithType(asso:uml::Association, type:uml::Type):uml::Property 
+	pre getAssoEWTpre is
+	do
+	  asso.memberEnd.select{oend|oend.type==type}.size==1
+	end
+	is
+	do
+	  result:=asso.memberEnd.select{oend|oend.type==type}.at(0) 
+	end
+	
+	operation getTheOtherAssoEndWithType(asso:uml::Association, type:uml::Type):uml::Property 
+	pre getAssoEWTpre is
+	do
+	  asso.memberEnd.select{oend|oend.type!=type}.size==1
+	end
+	is
+	do
+	  result:=asso.memberEnd.select{oend|oend.type!=type}.at(0) 
+	end
+	
+   operation GetAssoByClass(cls:uml::Class,assoSet:uml::Association[0..*]):uml::Association 
+   pre getasso is
+   do
+     assoSet.select{as|as.memberEnd.exists{me| me.type==cls}}.size==1
+   end
+   is
+   do
+     var asso:uml::Association init uml::Association.new
+     asso:=assoSet.select{as|as.memberEnd.exists{me| me.type==cls}}.at(0)
+     result:=asso
+   end    
+   
+   operation GetPara(op:uml::Operation, paraset:uml::Parameter[0..*]):uml::Parameter[0..1] 
+   pre GetPara is
+   do
+      //paraset.select{pa|pa.~operation==op}.size==1
+      paraset.select{pa|op.ownedParameter.contains(pa)}.size==1     
+   end
+   is
+   do
+     /*
+     stdio.writeln("The size is "+paraset.select{pa|pa.~operation==op}.size.toString())
+     stdio.writeln("The para is "+ self.ConUpdatedParas1.size.toString())
+     */
+     result:=paraset.select{pa|op.ownedParameter.contains(pa)}.at(0)
+   end  	   
+	
+   operation GetClass(op:uml::Operation,cset:uml::Class[0..*]):uml::Class[0..1]
+   pre GetClass is
+   do
+      //paraset.select{pa|pa.~operation==op}.size==1
+      cset.select{c|c.ownedOperation.contains(op)}.size==1     
+   end  
+   is
+   do
+     result:=cset.select{c|c.ownedOperation.contains(op)}.at(0)
+   end
+	
+   
+	  
+}

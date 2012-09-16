@@ -1,0 +1,50 @@
+/* $Id:$ 
+ * Creation : January 10, 2011
+ * Licence  : EPL 
+ * Copyright:
+ * Authors  : 
+ *            Administrator
+ */
+ 
+package designPatterns;
+ 
+require "kermeta"
+require "platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore"
+require "../DesignPatterns.kmt"
+require "FactoryMethodPatternStruct.kmt" 
+
+using kermeta::standard
+using kermeta::persistence
+using uml
+ 
+
+aspect class FactoryMethodPattern inherits DesignPattern
+{ 
+   
+    method CreatePatternSpecification() : Void is 
+    do
+      
+     
+      self.ConFatMtds.each{conFM|
+         // Helpers        
+         var owningclass:uml::Class init uml::Class.new
+         //stdio.writeln("Called")
+         owningclass:=GetClass(conFM, self.ConCrts)
+         stdio.writeln("The owning class is "+owningclass.name)
+          
+         var depclass:uml::Class init uml::Class.new
+         depclass:=self.GetDependsOn(owningclass)   
+         stdio.writeln("The depend class is "+depclass.name)        
+         //  Updated Body
+        
+         var fatmedImpSymbol:String 
+         fatmedImpSymbol:=
+           "{ return new "+ depclass.name+ "();}"
+         self.CreateSpec(conFM, "Body", fatmedImpSymbol)  
+         
+         }	
+          	
+    end
+}
+
+
